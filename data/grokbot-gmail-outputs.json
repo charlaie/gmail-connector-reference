@@ -1,0 +1,2378 @@
+{
+	"format": "gmail-connector-response-schemas/v1",
+	"id": "grokbot",
+	"title": "Grok Bot / Cursor Gmail",
+	"captured_on": "2026-10-24",
+	"evidence": "inferred-from-supplied-live-samples",
+	"note": "Response schemas inferred from samples. They do not specify required fields or establish a complete MCP outputSchema. Observed variants and unknown types are preserved. Captured account values are excluded.",
+	"tools": [
+		{
+			"name": "apply_sensitive_message_label",
+			"runtime_name": "apply_sensitive_message_label",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"labelIds": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "apply_sensitive_thread_label",
+			"runtime_name": "apply_sensitive_thread_label",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Whole thread",
+						"when": {
+							"target_argument": "threadId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "create_draft",
+			"runtime_name": "create_draft",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"draftId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 3
+					}
+				]
+			}
+		},
+		{
+			"name": "create_label",
+			"runtime_name": "create_label",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"color": {
+							"type": "object",
+							"properties": {
+								"textColor": {
+									"type": "string"
+								},
+								"backgroundColor": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"labelListVisibility": {
+									"type": "string"
+								},
+								"messageListVisibility": {
+									"type": "string"
+								},
+								"color": {
+									"type": "object",
+									"properties": {
+										"textColor": {
+											"type": "string"
+										},
+										"backgroundColor": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "delete_draft",
+			"runtime_name": "delete_draft",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"deleted": {
+							"type": "boolean"
+						},
+						"draftId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"deleted": {
+									"type": "boolean"
+								},
+								"draftId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			}
+		},
+		{
+			"name": "delete_label",
+			"runtime_name": "delete_label",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"deleted": {
+							"type": "boolean"
+						},
+						"labelId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"deleted": {
+									"type": "boolean"
+								},
+								"labelId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			}
+		},
+		{
+			"name": "forward",
+			"runtime_name": "forward",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "get_draft",
+			"runtime_name": "get_draft",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"status": {
+							"type": "number"
+						},
+						"body": {
+							"type": "string"
+						},
+						"guidance": {
+							"type": "string"
+						}
+					}
+				},
+				"successful_probe_count": 2,
+				"error_probe_count": 1,
+				"variants": [
+					{
+						"label": "FULL_CONTENT format",
+						"when": {
+							"messageFormat": "FULL_CONTENT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "get_me",
+			"runtime_name": "get_me",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"emailAddress": {
+							"type": "string"
+						},
+						"messagesTotal": {
+							"type": "number"
+						},
+						"threadsTotal": {
+							"type": "number"
+						},
+						"historyId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"emailAddress": {
+									"type": "string"
+								},
+								"messagesTotal": {
+									"type": "number"
+								},
+								"threadsTotal": {
+									"type": "number"
+								},
+								"historyId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "get_thread",
+			"runtime_name": "get_thread",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"messages": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"threadId": {
+										"type": "string"
+									},
+									"from": {
+										"type": "string"
+									},
+									"to": {
+										"type": "string"
+									},
+									"subject": {
+										"type": "string"
+									},
+									"date": {
+										"type": "string"
+									},
+									"labelIds": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"cc": {
+										"type": "string"
+									},
+									"truncated": {
+										"type": "boolean"
+									},
+									"body": {
+										"type": "string"
+									},
+									"attachments": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											},
+											"cc": {
+												"type": "string"
+											},
+											"truncated": {
+												"type": "boolean"
+											},
+											"body": {
+												"type": "string"
+											},
+											"attachments": {
+												"type": "array",
+												"items": {
+													"description": "No array elements were observed. The item type is unknown."
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "list_drafts",
+			"runtime_name": "list_drafts",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"drafts": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"draftId": {
+										"type": "string"
+									},
+									"id": {
+										"type": "string"
+									},
+									"threadId": {
+										"type": "string"
+									},
+									"from": {
+										"type": "string"
+									},
+									"to": {
+										"type": "string"
+									},
+									"subject": {
+										"type": "string"
+									},
+									"date": {
+										"type": "string"
+									},
+									"labelIds": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"resultSizeEstimate": {
+							"type": "number"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"drafts": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"draftId": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "list_filters",
+			"runtime_name": "list_filters",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown. The only sample was an empty object. The populated result shape is unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "list_labels",
+			"runtime_name": "list_labels",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"labels": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"messageListVisibility": {
+										"type": "string"
+									},
+									"labelListVisibility": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"labels": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"messageListVisibility": {
+												"type": "string"
+											},
+											"labelListVisibility": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "list_send_as",
+			"runtime_name": "list_send_as",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"sendAs": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"sendAsEmail": {
+										"type": "string"
+									},
+									"displayName": {
+										"type": "string"
+									},
+									"replyToAddress": {
+										"type": "string"
+									},
+									"signature": {
+										"type": "string"
+									},
+									"isPrimary": {
+										"type": "boolean"
+									},
+									"isDefault": {
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sendAs": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"sendAsEmail": {
+												"type": "string"
+											},
+											"displayName": {
+												"type": "string"
+											},
+											"replyToAddress": {
+												"type": "string"
+											},
+											"signature": {
+												"type": "string"
+											},
+											"isPrimary": {
+												"type": "boolean"
+											},
+											"isDefault": {
+												"type": "boolean"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "mark_email_spam",
+			"runtime_name": "mark_email_spam",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "trash_email",
+			"runtime_name": "trash_email",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "unmark_email_spam",
+			"runtime_name": "unmark_email_spam",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "untrash_email",
+			"runtime_name": "untrash_email",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Whole thread",
+						"when": {
+							"target_argument": "threadId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "read_email",
+			"runtime_name": "read_email",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											},
+											"attachmentId": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"raw": {
+									"type": "string"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 6,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											},
+											"attachmentId": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "FULL_CONTENT format",
+						"when": {
+							"messageFormat": "FULL_CONTENT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "MINIMAL format",
+						"when": {
+							"messageFormat": "MINIMAL"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "METADATA_ONLY format",
+						"when": {
+							"messageFormat": "METADATA_ONLY"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "RAW format",
+						"when": {
+							"messageFormat": "RAW"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"raw": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "search_emails",
+			"runtime_name": "search_emails",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								},
+								"nextPageToken": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Message envelopes",
+						"when": {
+							"idsOnly": false
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								},
+								"nextPageToken": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "IDs only",
+						"when": {
+							"idsOnly": true
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "send_draft",
+			"runtime_name": "send_draft",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		},
+		{
+			"name": "send_email",
+			"runtime_name": "send_email",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			}
+		},
+		{
+			"name": "update_draft",
+			"runtime_name": "update_draft",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"draftId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						},
+						"droppedAttachments": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"droppedAttachments": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			}
+		},
+		{
+			"name": "update_email_labels",
+			"runtime_name": "update_email_labels",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"message": {
+							"type": "string"
+						}
+					}
+				},
+				"successful_probe_count": 5,
+				"error_probe_count": 1,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 3
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			}
+		},
+		{
+			"name": "update_label",
+			"runtime_name": "update_label",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"color": {
+							"type": "object",
+							"properties": {
+								"textColor": {
+									"type": "string"
+								},
+								"backgroundColor": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								},
+								"labelListVisibility": {
+									"type": "string"
+								},
+								"messageListVisibility": {
+									"type": "string"
+								},
+								"color": {
+									"type": "object",
+									"properties": {
+										"textColor": {
+											"type": "string"
+										},
+										"backgroundColor": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			}
+		}
+	]
+}

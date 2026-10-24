@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Unofficial tool definitions for ChatGPT Gmail Plugin and Grok Bot / Cursor Gmail Connector. For reference only. May contain errors.">
+	<meta name="color-scheme" content="light">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+	<title>Gmail Connector Reference</title>
+	<link rel="stylesheet" href="assets/styles.css">
+	<script src="assets/catalog.js" defer></script>
+	<script src="assets/app.js" defer></script>
+</head>
+<body>
+	<a class="skip-link" href="#content">Skip to content</a>
+	<header class="topbar">
+		<button id="menu-button" class="icon-button menu-button" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+		</button>
+		<a class="brand" href="#overview" aria-label="Gmail Connector Reference home">
+			<svg class="brand-icon" viewBox="0 0 28 24" aria-hidden="true"><path d="M2 21V3l12 9L26 3v18M2 3l12 9L26 3"/></svg>
+			<span><span class="brand-name">Gmail Connector Reference</span><span class="brand-note">Unofficial. May contain errors.</span></span>
+		</a>
+		<div class="search">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+			<input id="search" type="search" placeholder="Search tools and descriptions" aria-label="Search tools and descriptions">
+			<kbd>/</kbd>
+		</div>
+		<span id="updated-date" class="capture-date">Last updated 25 Oct 2026</span>
+	</header>
+	<button id="scrim" class="scrim" type="button" aria-label="Close navigation" hidden></button>
+	<aside id="sidebar" class="sidebar" aria-label="Reference navigation">
+		<nav class="main-nav" aria-label="Pages">
+			<a href="#overview" data-page="overview"><span>Overview</span><span class="nav-count">46</span></a>
+		</nav>
+		<label class="provider-label" for="provider">Connector</label>
+		<select id="provider" class="provider-select" aria-label="Choose connector">
+			<option value="chatgpt">ChatGPT Gmail</option>
+			<option value="grokbot">Grok Bot / Cursor Gmail</option>
+		</select>
+		<nav id="tools" class="tools" aria-label="Tool catalog"></nav>
+		<div class="sidebar-footer">For reference only.<br>May contain errors.</div>
+	</aside>
+	<main id="content" class="content" tabindex="-1">
+		<p class="loading">Loading...</p>
+	</main>
+	<div id="notice" class="notice" role="status" hidden></div>
+	<noscript><p class="no-script">Enable JavaScript to use the viewer, or open the JSON catalogs in data/.</p></noscript>
+</body>
+</html>
+

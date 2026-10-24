@@ -1,0 +1,3873 @@
+{
+	"format": "gmail-connector-reference/v1",
+	"id": "grokbot",
+	"title": "Grok Bot / Cursor Gmail",
+	"captured_on": "2026-10-24",
+	"namespace": "user-Gmail",
+	"summary": "25 tools with captured input schemas. Response shapes come from a supplied 52-call log.",
+	"provenance": {
+		"source": "Dynamic-tool discovery for user-Gmail and a supplied CallDynamicTool log.",
+		"input_schema": "captured-json-schema",
+		"response_schema": "inferred-from-supplied-live-samples",
+		"evidence": "All 25 tools have successful samples in a supplied log of 51 Gmail calls and one host attachment download. This export uses the supplied results without rerunning the calls.",
+		"ownership": "The names identify the observed products. Server endpoints, publishers, and maintainers remain unverified.",
+		"edits": "Example addresses and one label in descriptions use placeholders. Tool and field descriptions otherwise keep their captured wording. Schema types, required fields, constraints, and enums are unchanged. Tool summaries and behavior notes use edited wording.",
+		"response_capture_on": "2026-10-24"
+	},
+	"privacy": "This export contains schema metadata, behavior notes, and synthetic examples. It excludes private transcripts, identities, mailbox contents, and live account IDs.",
+	"schema_dialects": {
+		"input": "http://json-schema.org/draft-07/schema#",
+		"responses": "https://json-schema.org/draft/2020-12/schema"
+	},
+	"example_policy": "Examples use synthetic values and were not executed. IDs are placeholders. Responses illustrate observed shapes without captured values.",
+	"tools": [
+		{
+			"name": "apply_sensitive_message_label",
+			"runtime_name": "apply_sensitive_message_label",
+			"category": "organize",
+			"description": "Move one Gmail message to the trash or mark it as spam; the rest of its thread stays where it is. To act on a whole thread, use apply_sensitive_thread_label. Returns the message's updated labels as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The message id, from search_emails or get_thread."
+					},
+					"labelOption": {
+						"type": "string",
+						"enum": ["TRASH", "SPAM"],
+						"description": "TRASH moves it to the trash (untrash_email reverses it); SPAM marks it as spam, adding SPAM and removing INBOX (unmark_email_spam reverses it)."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["messageId", "labelOption"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"labelIds": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Acts on one message. labelOption selects Trash or Spam. Use apply_sensitive_thread_label for a thread."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included id and labelIds."
+				}
+			],
+			"examples": [],
+			"summary": "Move one message to Trash or Spam."
+		},
+		{
+			"name": "apply_sensitive_thread_label",
+			"runtime_name": "apply_sensitive_thread_label",
+			"category": "organize",
+			"description": "Move one whole Gmail thread to the trash or mark it as spam: every message in the thread. Returns the thread id as JSON (per-message labels via get_thread).",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"threadId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The thread id, from search_emails."
+					},
+					"labelOption": {
+						"type": "string",
+						"enum": ["TRASH", "SPAM"],
+						"description": "TRASH moves it to the trash (untrash_email reverses it); SPAM marks it as spam, adding SPAM and removing INBOX (unmark_email_spam reverses it)."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["threadId", "labelOption"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Whole thread",
+						"when": {
+							"target_argument": "threadId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Acts on every message in a thread. The description specifies a thread ID response without per-message labels."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included the thread ID in id."
+				}
+			],
+			"examples": [],
+			"summary": "Move every message in a thread to Trash or Spam."
+		},
+		{
+			"name": "create_draft",
+			"runtime_name": "create_draft",
+			"category": "drafts",
+			"description": "Create a Gmail draft (plain text, with an optional HTML alternative). Pass replyToMessageId to draft a reply in that message's thread with correct threading headers; a reply names its recipients like a new email, in to (and cc to reply all). The user reviews and sends drafts themselves unless a send tool is used. Returns the draft id as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\"). Required, replies included: a reply goes to the original's Reply-To, else its From, as read_email shows them.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"default": "",
+						"type": "string",
+						"description": "Subject line. For replies the original message's subject is reused (Re:-prefixed) so Gmail threads the draft; this value is the fallback when the original has no subject."
+					},
+					"body": {
+						"default": "",
+						"type": "string",
+						"maxLength": 1000000,
+						"description": "Plain-text message body."
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Draft a reply to this Gmail message id, threading it correctly.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address. Must be the account's own address or one of its verified send-as aliases (see list_send_as). Omit to use the account's default.",
+						"type": "string"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": ["content"],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"draftId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 3
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Uses body, optional htmlBody, and base64 attachments. replyToMessageId selects the message to reply to."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included draftId and threadId. A reply draft used the original subject despite a custom subject argument."
+				}
+			],
+			"examples": [
+				{
+					"title": "Compose a draft",
+					"request": {
+						"to": "recipient@example.com",
+						"subject": "Example subject",
+						"body": "Example message.",
+						"htmlBody": "<p>Example message.</p>"
+					},
+					"response": {
+						"draftId": "example-draft",
+						"threadId": "example-thread"
+					}
+				}
+			],
+			"summary": "Create a plain-text draft with optional HTML and attachments."
+		},
+		{
+			"name": "create_label",
+			"runtime_name": "create_label",
+			"category": "organize",
+			"description": "Create a Gmail user label. Nest with \"/\" in the name (\"Clients/Acme\"). Returns the new label (id, name) as JSON; use the id with update_email_labels and search_emails.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 225,
+						"description": "The label name."
+					},
+					"labelListVisibility": {
+						"description": "Sidebar visibility (default labelShow).",
+						"type": "string",
+						"enum": ["labelShow", "labelShowIfUnread", "labelHide"]
+					},
+					"messageListVisibility": {
+						"description": "Message-list visibility (default show).",
+						"type": "string",
+						"enum": ["show", "hide"]
+					},
+					"textColor": {
+						"description": "Label text color as hex; must be from Gmail's fixed palette, set together with backgroundColor.",
+						"type": "string"
+					},
+					"backgroundColor": {
+						"description": "Label background color as hex; must be from Gmail's fixed palette, set together with textColor.",
+						"type": "string"
+					},
+					"colorPreset": {
+						"description": "Label color from Gmail's preset tiles. textColor and backgroundColor, when set, win over it.",
+						"type": "string",
+						"enum": [
+							"LABEL_COLOR_PRESET_UNSPECIFIED",
+							"LABEL_COLOR_PRESET_BLACK",
+							"LABEL_COLOR_PRESET_DARK_GRAY",
+							"LABEL_COLOR_PRESET_GRAY",
+							"LABEL_COLOR_PRESET_LIGHT_GRAY",
+							"LABEL_COLOR_PRESET_WHITE",
+							"LABEL_COLOR_PRESET_RED",
+							"LABEL_COLOR_PRESET_ORANGE",
+							"LABEL_COLOR_PRESET_YELLOW",
+							"LABEL_COLOR_PRESET_GREEN",
+							"LABEL_COLOR_PRESET_MINT",
+							"LABEL_COLOR_PRESET_TEAL",
+							"LABEL_COLOR_PRESET_BLUE",
+							"LABEL_COLOR_PRESET_PURPLE",
+							"LABEL_COLOR_PRESET_PINK",
+							"LABEL_COLOR_PRESET_DARK_RED",
+							"LABEL_COLOR_PRESET_DARK_ORANGE",
+							"LABEL_COLOR_PRESET_DARK_GREEN",
+							"LABEL_COLOR_PRESET_DARK_BLUE",
+							"LABEL_COLOR_PRESET_DARK_PURPLE",
+							"LABEL_COLOR_PRESET_DARK_PINK",
+							"LABEL_COLOR_PRESET_BROWN"
+						]
+					},
+					"autoCreateParentLabels": {
+						"description": "Create the missing parent labels of a nested name first, so \"Projects/Alpha\" also creates \"Projects\" (default true).",
+						"type": "boolean"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["name"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"color": {
+							"type": "object",
+							"properties": {
+								"textColor": {
+									"type": "string"
+								},
+								"backgroundColor": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"labelListVisibility": {
+									"type": "string"
+								},
+								"messageListVisibility": {
+									"type": "string"
+								},
+								"color": {
+									"type": "object",
+									"properties": {
+										"textColor": {
+											"type": "string"
+										},
+										"backgroundColor": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Supports nested names, visibility, colors, presets, and optional parent-label creation."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included the label ID, name, visibility, and color."
+				}
+			],
+			"examples": [],
+			"summary": "Create a user label with optional nesting, visibility, and color."
+		},
+		{
+			"name": "delete_draft",
+			"runtime_name": "delete_draft",
+			"category": "drafts",
+			"description": "Delete a Gmail draft permanently (drafts skip the trash; this cannot be undone). Sent mail is unaffected. Returns a confirmation as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The draft id to delete."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["draftId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"deleted": {
+							"type": "boolean"
+						},
+						"draftId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"deleted": {
+									"type": "boolean"
+								},
+								"draftId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "The description specifies permanent draft deletion without Trash."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included deleted and draftId."
+				}
+			],
+			"examples": [],
+			"summary": "Delete a draft permanently without moving it to Trash."
+		},
+		{
+			"name": "delete_label",
+			"runtime_name": "delete_label",
+			"category": "organize",
+			"description": "Delete a Gmail user label by id, removing it from every message it is applied to (the messages themselves are untouched; system labels cannot be deleted). This cannot be undone. Returns a confirmation as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"labelId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The label id, from list_labels."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["labelId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"deleted": {
+							"type": "boolean"
+						},
+						"labelId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"deleted": {
+									"type": "boolean"
+								},
+								"labelId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Deletes a user label and removes it from messages. Keeps the messages."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included deleted and labelId."
+				}
+			],
+			"examples": [],
+			"summary": "Delete a user label without deleting its messages."
+		},
+		{
+			"name": "forward",
+			"runtime_name": "forward",
+			"category": "send",
+			"description": "Forward a Gmail message to new recipients, with an optional note above the quoted original: comment as plain text, htmlBody as HTML. Name each attachment to send along in `attachments`, as read_email lists it; the others are noted in the body by name. Returns the sent message id as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail message id to forward."
+					},
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\").",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"comment": {
+						"description": "Optional plain-text note placed above the quoted original.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the note, placed above the quoted original in the message's HTML part. Without comment, its text is the plain-text note.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"attachments": {
+						"description": "Filenames of the original's attachments to send along, exactly as read_email lists them. A name that more than one attachment shares is refused. Omit to forward the text only.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["messageId", "to"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Forwards quoted content. Select original attachments by exact filename. The tool omits unselected files."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included messageId and threadId."
+				}
+			],
+			"examples": [
+				{
+					"title": "Forward selected attachments",
+					"request": {
+						"messageId": "example-message",
+						"to": "recipient@example.com",
+						"comment": "Example note.",
+						"attachments": ["example.pdf"]
+					},
+					"response": {
+						"messageId": "example-message",
+						"threadId": "example-thread"
+					}
+				}
+			],
+			"summary": "Forward a message as quoted content with selected attachments."
+		},
+		{
+			"name": "get_draft",
+			"runtime_name": "get_draft",
+			"category": "drafts",
+			"description": "Read one Gmail draft: envelope headers and the text body (same extraction as read_email). `draftId` comes from list_drafts or create_draft.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail draft id."
+					},
+					"maxChars": {
+						"description": "Character cap on the body (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["draftId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"status": {
+							"type": "number"
+						},
+						"body": {
+							"type": "string"
+						},
+						"guidance": {
+							"type": "string"
+						}
+					}
+				},
+				"successful_probe_count": 2,
+				"error_probe_count": 1,
+				"variants": [
+					{
+						"label": "FULL_CONTENT format",
+						"when": {
+							"messageFormat": "FULL_CONTENT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"bcc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Uses the same messageFormat choices and maxChars bounds as read_email."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "FULL_CONTENT and PLAIN_TEXT returned flat draft objects. Attachment metadata omitted attachmentId. Reading a sent draft returned provider_http_error with status 404 and guidance."
+				}
+			],
+			"examples": [
+				{
+					"title": "Read a draft with attachment metadata",
+					"request": {
+						"draftId": "example-draft",
+						"messageFormat": "PLAIN_TEXT"
+					},
+					"response": {
+						"draftId": "example-draft",
+						"id": "example-message",
+						"threadId": "example-thread",
+						"from": "sender@example.com",
+						"to": "recipient@example.com",
+						"subject": "Example subject",
+						"date": "2026-10-24T00:00:00Z",
+						"labelIds": ["DRAFT"],
+						"snippet": "Example message.",
+						"cc": "",
+						"bcc": "",
+						"truncated": false,
+						"body": "Example message.",
+						"attachments": [
+							{
+								"filename": "example.txt",
+								"mimeType": "text/plain",
+								"sizeBytes": 16
+							}
+						]
+					}
+				}
+			],
+			"summary": "Read a draft with headers, body, and attachment metadata."
+		},
+		{
+			"name": "get_me",
+			"runtime_name": "get_me",
+			"category": "account",
+			"description": "Get the signed-in Gmail account's profile (email address, message totals). Useful to confirm which account is connected.",
+			"input_schema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"emailAddress": {
+							"type": "string"
+						},
+						"messagesTotal": {
+							"type": "number"
+						},
+						"threadsTotal": {
+							"type": "number"
+						},
+						"historyId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"emailAddress": {
+									"type": "string"
+								},
+								"messagesTotal": {
+									"type": "number"
+								},
+								"threadsTotal": {
+									"type": "number"
+								},
+								"historyId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "The description specifies an account profile with email address and message totals."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included emailAddress, messagesTotal, threadsTotal, and historyId in a direct JSON object."
+				}
+			],
+			"examples": [],
+			"summary": "Read the connected account profile and mailbox totals."
+		},
+		{
+			"name": "get_thread",
+			"runtime_name": "get_thread",
+			"category": "read",
+			"description": "Get a Gmail thread: every message in order with its envelope, text body (plain text preferred, HTML stripped to text otherwise) and attachment names. The bodies share the maxChars budget; read a message marked truncated with read_email. `threadId` comes from search_emails results. Each attachment includes its Gmail attachmentId; DownloadFile takes source.fileId as \"<message id>/<attachmentId>\".",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"threadId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail thread id."
+					},
+					"maxChars": {
+						"description": "Character budget shared by the message bodies (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["threadId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"messages": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"threadId": {
+										"type": "string"
+									},
+									"from": {
+										"type": "string"
+									},
+									"to": {
+										"type": "string"
+									},
+									"subject": {
+										"type": "string"
+									},
+									"date": {
+										"type": "string"
+									},
+									"labelIds": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"cc": {
+										"type": "string"
+									},
+									"truncated": {
+										"type": "boolean"
+									},
+									"body": {
+										"type": "string"
+									},
+									"attachments": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											},
+											"cc": {
+												"type": "string"
+											},
+											"truncated": {
+												"type": "boolean"
+											},
+											"body": {
+												"type": "string"
+											},
+											"attachments": {
+												"type": "array",
+												"items": {
+													"description": "No array elements were observed. The item type is unknown."
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Message bodies share the maxChars limit. Use read_email for truncated messages. The host handles attachment downloads."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included id and messages. Each message had a flat body, attachment metadata, and a truncation flag."
+				}
+			],
+			"examples": [],
+			"summary": "Read all messages in a thread with a shared body-length limit."
+		},
+		{
+			"name": "list_drafts",
+			"runtime_name": "list_drafts",
+			"category": "drafts",
+			"description": "List the account's Gmail drafts, newest first, with each draft's envelope (to, subject, snippet). Returns draft ids for get_draft, update_draft, delete_draft and send_draft; pass `nextPageToken` back as pageToken for more.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"maxResults": {
+						"description": "Drafts per page (default 10, max 25).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 25
+					},
+					"pageToken": {
+						"description": "The `nextPageToken` from a previous response, verbatim.",
+						"type": "string"
+					},
+					"query": {
+						"description": "Gmail search query to filter drafts (same grammar as search_emails).",
+						"type": "string"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"drafts": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"draftId": {
+										"type": "string"
+									},
+									"id": {
+										"type": "string"
+									},
+									"threadId": {
+										"type": "string"
+									},
+									"from": {
+										"type": "string"
+									},
+									"to": {
+										"type": "string"
+									},
+									"subject": {
+										"type": "string"
+									},
+									"date": {
+										"type": "string"
+									},
+									"labelIds": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"resultSizeEstimate": {
+							"type": "number"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"drafts": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"draftId": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Supports query filters and pageToken pagination. The declared page limit is 25."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included draft summaries in drafts and a resultSizeEstimate."
+				}
+			],
+			"examples": [],
+			"summary": "List drafts, newest first, with summary metadata and pagination."
+		},
+		{
+			"name": "list_filters",
+			"runtime_name": "list_filters",
+			"category": "account",
+			"description": "List the Gmail account's filters: each filter's id, its matching criteria (from, to, subject, query, negatedQuery, hasAttachment, size) and the action applied to matching mail (labels added or removed). Pass nextPageToken back as pageToken for more. Returns Gmail JSON; {} means no filters.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"pageSize": {
+						"description": "Filters per page (default 20, max 50).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 50
+					},
+					"pageToken": {
+						"description": "nextPageToken from the previous list_filters call.",
+						"type": "string",
+						"pattern": "^\\d+$"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown. The only sample was an empty object. The populated result shape is unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Lists filter criteria and actions. The captured catalog has no tools to create, edit, or delete filters."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "An account with no filters returned an empty object. Populated results and pagination remain unknown."
+				}
+			],
+			"examples": [
+				{
+					"title": "List an empty filter collection",
+					"request": {},
+					"response": {}
+				}
+			],
+			"summary": "List filter criteria and actions."
+		},
+		{
+			"name": "list_labels",
+			"runtime_name": "list_labels",
+			"category": "organize",
+			"description": "List the Gmail account's labels (system and user) with their ids, for search_emails labelIds filters. Returns raw Gmail JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"labels": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"messageListVisibility": {
+										"type": "string"
+									},
+									"labelListVisibility": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"labels": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"messageListVisibility": {
+												"type": "string"
+											},
+											"labelListVisibility": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Returns system and user label IDs. The description calls the result raw Gmail JSON. Samples do not establish the full response contract."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included a labels array. The export records each field's type and omits private names and values."
+				}
+			],
+			"examples": [],
+			"summary": "List system and user labels with their IDs."
+		},
+		{
+			"name": "list_send_as",
+			"runtime_name": "list_send_as",
+			"category": "account",
+			"description": "List the addresses this Gmail account can send from: its own address and its send-as aliases. Entries with isPrimary true or verificationStatus \"accepted\" can be passed as `from` to create_draft or send_email. Returns raw Gmail JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"sendAs": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"sendAsEmail": {
+										"type": "string"
+									},
+									"displayName": {
+										"type": "string"
+									},
+									"replyToAddress": {
+										"type": "string"
+									},
+									"signature": {
+										"type": "string"
+									},
+									"isPrimary": {
+										"type": "boolean"
+									},
+									"isDefault": {
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sendAs": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"sendAsEmail": {
+												"type": "string"
+											},
+											"displayName": {
+												"type": "string"
+											},
+											"replyToAddress": {
+												"type": "string"
+											},
+											"signature": {
+												"type": "string"
+											},
+											"isPrimary": {
+												"type": "boolean"
+											},
+											"isDefault": {
+												"type": "boolean"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Lists primary and verified send-as addresses for the from field. Verified aliases have verificationStatus=\"accepted\"."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included a sendAs array with address, display name, reply-to, signature, primary, and default fields. The export records only their types."
+				}
+			],
+			"examples": [],
+			"summary": "List the account address and send-as aliases."
+		},
+		{
+			"name": "mark_email_spam",
+			"runtime_name": "mark_email_spam",
+			"category": "organize",
+			"description": "Mark Gmail mail as spam: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). Adds SPAM and removes INBOX. For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Accepts exactly one of messageId, threadId, or messageIds. The description specifies adding SPAM and removing INBOX."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "A message target returned id and labelIds. A batch returned modified."
+				}
+			],
+			"examples": [],
+			"summary": "Add SPAM and remove INBOX on a message, thread, or message batch."
+		},
+		{
+			"name": "trash_email",
+			"runtime_name": "trash_email",
+			"category": "organize",
+			"description": "Move Gmail mail to the trash: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Gmail purges trashed mail after ~30 days; untrash_email reverses it before then. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Accepts one message, one thread, or up to 1,000 message IDs. Use untrash_email to restore them."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "A message target returned id and labelIds. A batch returned modified."
+				}
+			],
+			"examples": [
+				{
+					"title": "Move a message to Trash",
+					"request": {
+						"messageId": "example-message"
+					},
+					"response": {
+						"id": "example-message",
+						"labelIds": ["TRASH"]
+					}
+				}
+			],
+			"summary": "Move a message, thread, or message batch to Trash."
+		},
+		{
+			"name": "unmark_email_spam",
+			"runtime_name": "unmark_email_spam",
+			"category": "organize",
+			"description": "Unmark Gmail mail as spam: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). Removes SPAM and restores INBOX. For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "The description specifies removing SPAM and restoring INBOX."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "A message target returned id and labelIds. A batch returned modified."
+				}
+			],
+			"examples": [],
+			"summary": "Remove SPAM and restore INBOX on a message, thread, or message batch."
+		},
+		{
+			"name": "untrash_email",
+			"runtime_name": "untrash_email",
+			"category": "organize",
+			"description": "Restore Gmail mail from the trash: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Whole thread",
+						"when": {
+							"target_argument": "threadId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Restores trashed messages through a dedicated tool."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "A message target returned id and labelIds. A thread returned id. A batch returned modified. Removing TRASH did not always restore INBOX. The test added INBOX explicitly."
+				}
+			],
+			"examples": [
+				{
+					"title": "Restore a message",
+					"request": {
+						"messageId": "example-message"
+					},
+					"response": {
+						"id": "example-message",
+						"labelIds": []
+					}
+				}
+			],
+			"summary": "Remove TRASH from a message, thread, or message batch."
+		},
+		{
+			"name": "read_email",
+			"runtime_name": "read_email",
+			"category": "read",
+			"description": "Read one Gmail message: envelope headers, the text body (plain text preferred, HTML stripped to text otherwise), and the names of any attachments. Attachment bytes are not returned; use download_file where available. `messageId` comes from search_emails or a thread. Each attachment includes its Gmail attachmentId; DownloadFile takes source.fileId as \"<message id>/<attachmentId>\".",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail message id."
+					},
+					"maxChars": {
+						"description": "Character cap on the body (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["messageId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											},
+											"attachmentId": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"raw": {
+									"type": "string"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 6,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "PLAIN_TEXT format",
+						"when": {
+							"messageFormat": "PLAIN_TEXT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"filename": {
+												"type": "string"
+											},
+											"mimeType": {
+												"type": "string"
+											},
+											"sizeBytes": {
+												"type": "number"
+											},
+											"attachmentId": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "FULL_CONTENT format",
+						"when": {
+							"messageFormat": "FULL_CONTENT"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"body": {
+									"type": "string"
+								},
+								"htmlBody": {
+									"type": "string"
+								},
+								"attachments": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "MINIMAL format",
+						"when": {
+							"messageFormat": "MINIMAL"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"subject": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"type": "string"
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "METADATA_ONLY format",
+						"when": {
+							"messageFormat": "METADATA_ONLY"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"from": {
+									"type": "string"
+								},
+								"to": {
+									"type": "string"
+								},
+								"date": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"cc": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					},
+					{
+						"label": "RAW format",
+						"when": {
+							"messageFormat": "RAW"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"truncated": {
+									"type": "boolean"
+								},
+								"raw": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Defaults to a flat plain-text object. Supports five messageFormat values and maxChars. The host handles attachment downloads."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "Tests covered all five formats. PLAIN_TEXT returned body and attachments. FULL_CONTENT added htmlBody. MINIMAL omitted body and attachments. METADATA_ONLY also omitted subject and snippet. RAW returned source and a truncation flag. Attachment metadata included attachmentId."
+				}
+			],
+			"examples": [
+				{
+					"title": "Read a plain-text message",
+					"request": {
+						"messageId": "example-message",
+						"messageFormat": "PLAIN_TEXT",
+						"maxChars": 50000
+					}
+				}
+			],
+			"summary": "Read a message in one of five formats with a body-length limit."
+		},
+		{
+			"name": "search_emails",
+			"runtime_name": "search_emails",
+			"category": "read",
+			"description": "Search Gmail with Gmail's own query grammar (e.g. \"from:sender@example.com is:unread newer_than:7d\", \"subject:invoice has:attachment\"). Returns each match's envelope (from, to, subject, date, labels, snippet); pass `nextPageToken` back as pageToken for more. Use read_email for a message's content. For bulk changes, set idsOnly to list just message and thread ids, then pass them as messageIds to update_email_labels, trash_email or mark_email_spam in one call.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"query": {
+						"description": "Gmail search query. Omit to list the most recent messages.",
+						"type": "string"
+					},
+					"labelIds": {
+						"description": "Restrict to these label ids (e.g. [\"INBOX\"], [\"SENT\"]).",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"maxResults": {
+						"description": "Messages per page (default 20, max 25; with idsOnly, default 100, max 500).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 500
+					},
+					"pageToken": {
+						"description": "The `nextPageToken` from a previous response, verbatim.",
+						"type": "string"
+					},
+					"includeSpamTrash": {
+						"description": "Also search spam and trash (default false).",
+						"type": "boolean"
+					},
+					"idsOnly": {
+						"description": "Return only message and thread ids, without envelopes (default false).",
+						"type": "boolean"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								},
+								"nextPageToken": {
+									"type": "string"
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": null,
+				"successful_probe_count": 3,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Message envelopes",
+						"when": {
+							"idsOnly": false
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											},
+											"from": {
+												"type": "string"
+											},
+											"to": {
+												"type": "string"
+											},
+											"subject": {
+												"type": "string"
+											},
+											"date": {
+												"type": "string"
+											},
+											"labelIds": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"snippet": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								},
+								"nextPageToken": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					},
+					{
+						"label": "IDs only",
+						"when": {
+							"idsOnly": true
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messages": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"threadId": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"resultSizeEstimate": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Supports message summaries and idsOnly. The description caps summary pages at 25 and ID pages at 500. The schema sets maxResults to a maximum of 500."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "Summary results included messages, resultSizeEstimate, and optional nextPageToken. idsOnly returned id and threadId pairs. A maxResults=0 call returned results despite the schema minimum of 1. The capture does not establish whether the host rewrote the argument or the server accepted it."
+				}
+			],
+			"examples": [
+				{
+					"title": "Search message IDs",
+					"request": {
+						"query": "is:unread",
+						"idsOnly": true,
+						"maxResults": 100
+					},
+					"response": {
+						"messages": [
+							{
+								"id": "example-message",
+								"threadId": "example-thread"
+							}
+						],
+						"resultSizeEstimate": 1
+					}
+				}
+			],
+			"summary": "Search for message summaries or IDs with pagination."
+		},
+		{
+			"name": "send_draft",
+			"runtime_name": "send_draft",
+			"category": "send",
+			"description": "Send an existing Gmail draft by its draft id (from create_draft or list_drafts). The draft's content is sent as-is; the draft disappears once sent, so a repeat send of the same id fails naturally. Returns the sent message id as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"description": "The draft id to send."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["draftId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Sends the saved content and removes the draft. The description says sending the same draft ID again fails."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included messageId and threadId. Reading the sent draft returned provider_http_error with status 404."
+				}
+			],
+			"examples": [],
+			"summary": "Send a saved draft and remove it from drafts."
+		},
+		{
+			"name": "send_email",
+			"runtime_name": "send_email",
+			"category": "send",
+			"description": "Send a Gmail message (plain text, with an optional HTML alternative and attached files) immediately, without a draft step. Pass replyToMessageId to send a reply in that message's thread with correct threading headers; a reply names its recipients like a new email, in to and cc; set replyAll to have a reply that is not to everyone on the original refused. Prefer create_draft when the user should review before sending. Returns the sent message id as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\"). Required, replies included: a reply goes to the original's Reply-To, else its From, as read_email shows them.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"default": "",
+						"type": "string",
+						"description": "Subject line. For replies the original message's subject is reused (Re:-prefixed) so Gmail threads the message; this value is the fallback when the original has no subject."
+					},
+					"body": {
+						"default": "",
+						"type": "string",
+						"maxLength": 1000000,
+						"description": "Plain-text message body."
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Send a reply to this Gmail message id, threaded correctly. When every recipient was already on that message, the reply quotes it below the body, as Gmail's reply does, so leave it out of body.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address. Must be the account's own address or one of its verified send-as aliases (see list_send_as). Omit to use the account's default.",
+						"type": "string"
+					},
+					"replyAll": {
+						"description": "With replyToMessageId: a reply to everyone on the original, who must all be in to and cc: to its Reply-To, else its From, and cc its other To and Cc recipients, leaving out this account's own addresses. A call whose to and cc are not exactly those is refused, sending nothing, with the recipients to pass.",
+						"type": "boolean"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": ["content"],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"messageId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"messageId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Uses body, htmlBody, and base64 attachments. replyAll checks the recipients. The description requires to, but the schema marks it optional."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "Direct sends and replies returned messageId and threadId. A reply used the original subject with a reply prefix."
+				}
+			],
+			"examples": [
+				{
+					"title": "Compose a message",
+					"request": {
+						"to": "recipient@example.com",
+						"subject": "Example subject",
+						"body": "Example message.",
+						"htmlBody": "<p>Example message.</p>"
+					},
+					"response": {
+						"messageId": "example-message",
+						"threadId": "example-thread"
+					}
+				}
+			],
+			"summary": "Send a plain-text message with optional HTML and attachments."
+		},
+		{
+			"name": "update_draft",
+			"runtime_name": "update_draft",
+			"category": "drafts",
+			"description": "Edit a Gmail draft (plain text with an optional HTML alternative and attached files). Omitted fields keep the draft's current value; pass an empty string to clear cc or bcc. Gmail rebuilds the draft whole, so files already attached to it are dropped and listed as droppedAttachments; pass the ones to keep again in attachments. The draft keeps its thread unless replyToMessageId re-threads it. Returns the draft id as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The draft id to update."
+					},
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\").",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"description": "Subject line (see create_draft for reply subject rules).",
+						"type": "string"
+					},
+					"body": {
+						"description": "Plain-text message body. With only htmlBody given, it is the HTML as text.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Re-thread the draft as a reply to this Gmail message id.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address: the account's own address or a verified send-as alias (see list_send_as). Omit to keep the draft's current sender.",
+						"type": "string"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": ["content"],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["draftId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"draftId": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						},
+						"droppedAttachments": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"draftId": {
+									"type": "string"
+								},
+								"threadId": {
+									"type": "string"
+								},
+								"droppedAttachments": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Omitted headers keep their values. The description says the tool drops existing attachments and reports them in droppedAttachments unless supplied again."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included draftId and threadId. When an update removed an attachment, droppedAttachments listed its filename."
+				}
+			],
+			"examples": [
+				{
+					"title": "Update a draft header",
+					"request": {
+						"draftId": "example-draft",
+						"subject": "Updated example subject"
+					},
+					"response": {
+						"draftId": "example-draft",
+						"threadId": "example-thread",
+						"droppedAttachments": ["example.txt"]
+					}
+				}
+			],
+			"summary": "Patch a draft. Resupply attachments to keep them."
+		},
+		{
+			"name": "update_email_labels",
+			"runtime_name": "update_email_labels",
+			"category": "organize",
+			"description": "Add and/or remove Gmail labels on one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Label ids come from list_labels; UNREAD, STARRED, IMPORTANT and user labels are all valid. TRASH and SPAM are refused here. For a message, returns the updated label ids as JSON; for a thread, returns the thread id (per-message label state via get_thread); for messageIds, returns how many messages were changed.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to relabel.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to relabel (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					},
+					"addLabelIds": {
+						"description": "Label ids to add.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"removeLabelIds": {
+						"description": "Label ids to remove.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						{
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						}
+					]
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"message": {
+							"type": "string"
+						}
+					}
+				},
+				"successful_probe_count": 5,
+				"error_probe_count": 1,
+				"variants": [
+					{
+						"label": "Single message",
+						"when": {
+							"target_argument": "messageId"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"labelIds": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"sample_count": 3
+					},
+					{
+						"label": "Message batch",
+						"when": {
+							"target_argument": "messageIds"
+						},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"modified": {
+									"type": "number"
+								}
+							}
+						},
+						"sample_count": 2
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Accepts exactly one of messageId, threadId, or messageIds. Rejects TRASH and SPAM. Use their dedicated tools."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "A message target returned id and labelIds. A batch returned modified. Adding TRASH returned invalid_arguments."
+				}
+			],
+			"examples": [
+				{
+					"title": "Archive a message",
+					"request": {
+						"messageId": "example-message",
+						"removeLabelIds": ["INBOX"]
+					},
+					"response": {
+						"id": "example-message",
+						"labelIds": []
+					}
+				}
+			],
+			"summary": "Add or remove labels on a message, thread, or message batch. Use separate tools for TRASH and SPAM."
+		},
+		{
+			"name": "update_label",
+			"runtime_name": "update_label",
+			"category": "organize",
+			"description": "Update a Gmail user label's name, visibility, or color by label id (a patch: omitted fields keep their values; system labels like INBOX cannot be updated). Returns the updated label as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"labelId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The label id, from list_labels."
+					},
+					"name": {
+						"description": "New label name.",
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 225
+					},
+					"labelListVisibility": {
+						"description": "Sidebar visibility (default labelShow).",
+						"type": "string",
+						"enum": ["labelShow", "labelShowIfUnread", "labelHide"]
+					},
+					"messageListVisibility": {
+						"description": "Message-list visibility (default show).",
+						"type": "string",
+						"enum": ["show", "hide"]
+					},
+					"textColor": {
+						"description": "Label text color as hex; must be from Gmail's fixed palette, set together with backgroundColor.",
+						"type": "string"
+					},
+					"backgroundColor": {
+						"description": "Label background color as hex; must be from Gmail's fixed palette, set together with textColor.",
+						"type": "string"
+					},
+					"colorPreset": {
+						"description": "Label color from Gmail's preset tiles. textColor and backgroundColor, when set, win over it.",
+						"type": "string",
+						"enum": [
+							"LABEL_COLOR_PRESET_UNSPECIFIED",
+							"LABEL_COLOR_PRESET_BLACK",
+							"LABEL_COLOR_PRESET_DARK_GRAY",
+							"LABEL_COLOR_PRESET_GRAY",
+							"LABEL_COLOR_PRESET_LIGHT_GRAY",
+							"LABEL_COLOR_PRESET_WHITE",
+							"LABEL_COLOR_PRESET_RED",
+							"LABEL_COLOR_PRESET_ORANGE",
+							"LABEL_COLOR_PRESET_YELLOW",
+							"LABEL_COLOR_PRESET_GREEN",
+							"LABEL_COLOR_PRESET_MINT",
+							"LABEL_COLOR_PRESET_TEAL",
+							"LABEL_COLOR_PRESET_BLUE",
+							"LABEL_COLOR_PRESET_PURPLE",
+							"LABEL_COLOR_PRESET_PINK",
+							"LABEL_COLOR_PRESET_DARK_RED",
+							"LABEL_COLOR_PRESET_DARK_ORANGE",
+							"LABEL_COLOR_PRESET_DARK_GREEN",
+							"LABEL_COLOR_PRESET_DARK_BLUE",
+							"LABEL_COLOR_PRESET_DARK_PURPLE",
+							"LABEL_COLOR_PRESET_DARK_PINK",
+							"LABEL_COLOR_PRESET_BROWN"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": ["labelId"]
+			},
+			"input_evidence": "captured-json-schema",
+			"response": {
+				"evidence": "inferred-from-supplied-live-samples",
+				"root_label": "result",
+				"envelope": "The supplied CallDynamicTool capture returned direct JSON objects. These schemas describe those objects as the host exposed them.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"color": {
+							"type": "object",
+							"properties": {
+								"textColor": {
+									"type": "string"
+								},
+								"backgroundColor": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0,
+				"variants": [
+					{
+						"label": "Observed success",
+						"when": {},
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								},
+								"labelListVisibility": {
+									"type": "string"
+								},
+								"messageListVisibility": {
+									"type": "string"
+								},
+								"color": {
+									"type": "object",
+									"properties": {
+										"textColor": {
+											"type": "string"
+										},
+										"backgroundColor": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"sample_count": 1
+					}
+				]
+			},
+			"behavior": [
+				{
+					"evidence": "declared",
+					"text": "Patches a user label's name, visibility, or color. Rejects system labels."
+				},
+				{
+					"evidence": "observed",
+					"source": "supplied-live-capture",
+					"text": "The result included the updated label with type, visibility, and color."
+				}
+			],
+			"examples": [],
+			"summary": "Patch a user label's name, visibility, or color."
+		}
+	],
+	"updated_on": "2026-10-25"
+}

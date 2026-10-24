@@ -1,0 +1,4441 @@
+{
+	"format": "gmail-connector-reference/v1",
+	"id": "chatgpt",
+	"title": "ChatGPT Gmail",
+	"captured_on": "2026-10-24",
+	"namespace": "mcp__codex_apps__gmail_",
+	"summary": "21 tools with MIME composition. Response shapes come from 42 live test calls.",
+	"provenance": {
+		"source": "Exposed TypeScript declarations and controlled live calls.",
+		"input_schema": "reconstructed",
+		"response_schema": "inferred-from-live-samples",
+		"evidence": "All 21 tools have successful samples from 42 live calls. The catalog contains input schemas, inferred response types, and behavior notes.",
+		"ownership": "The names identify the observed products. Server endpoints, publishers, and maintainers remain unverified.",
+		"edits": "Example addresses and one label in descriptions use placeholders. Tool and field descriptions otherwise keep their captured wording. Schema types, required fields, constraints, and enums are unchanged. Tool summaries and behavior notes use edited wording."
+	},
+	"privacy": "This export contains schema metadata, behavior notes, and synthetic examples. It excludes private transcripts, identities, mailbox contents, and live account IDs.",
+	"schema_dialects": {
+		"input": "https://json-schema.org/draft/2020-12/schema",
+		"responses": "https://json-schema.org/draft/2020-12/schema"
+	},
+	"example_policy": "Examples use synthetic values and were not executed. IDs are placeholders. Responses illustrate observed shapes without captured values.",
+	"tools": [
+		{
+			"name": "apply_labels_to_emails",
+			"runtime_name": "mcp__codex_apps__gmail_apply_labels_to_emails",
+			"category": "organize",
+			"description": "Apply labels to Gmail messages using label names rather than Gmail label IDs. This is the preferred labeling action for models because it avoids a separate label-id lookup step. Prefer this when the user refers to labels by name.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"add_label_names": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail label display names. This action accepts names and can create missing labels when create_missing_labels is true; batch_modify_email requires existing Gmail label IDs."
+					},
+					"create_missing_labels": {
+						"type": "boolean",
+						"description": "Whether to create missing labels before applying them."
+					},
+					"message_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail message IDs returned by Gmail search/read results. Use `message_ids` from search_email_ids or `id` fields from email results. Do not pass placeholder values like `dummy`, `latest`, `gmail:<id>`, draft IDs, thread IDs, email addresses, subjects, or Gmail UI URLs."
+					},
+					"remove_label_names": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail label display names. This action accepts names and can create missing labels when create_missing_labels is true; batch_modify_email requires existing Gmail label IDs."
+					}
+				},
+				"required": ["message_ids"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"success": {
+							"type": "boolean"
+						},
+						"added_label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"removed_label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"created_labels": {
+							"type": "array",
+							"items": {
+								"description": "No array elements were observed. The item type is unknown."
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Adding and removing a label by name resolved it to a label ID. The test did not cover automatic label creation."
+				}
+			],
+			"examples": [],
+			"summary": "Apply labels to messages by label name."
+		},
+		{
+			"name": "archive_emails",
+			"runtime_name": "mcp__codex_apps__gmail_archive_emails",
+			"category": "organize",
+			"description": "Archive Gmail threads while keeping their messages available in Gmail. The INBOX label is removed from every message currently in each thread, so the thread disappears from the inbox.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"thread_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail thread IDs to archive. Empty and duplicate IDs are ignored. At most 100 distinct threads may be archived."
+					}
+				},
+				"required": ["thread_ids"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"thread_id": {
+										"type": "string"
+									},
+									"success": {
+										"type": "boolean"
+									},
+									"error": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"detail": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Archiving removed INBOX. The test thread contained one message."
+				}
+			],
+			"examples": [],
+			"summary": "Remove INBOX from every message in each selected thread."
+		},
+		{
+			"name": "batch_modify_email",
+			"runtime_name": "mcp__codex_apps__gmail_batch_modify_email",
+			"category": "organize",
+			"description": "Add or remove Gmail labels on a batch of individual messages. This modifies messages, not whole threads. To label by subject, sender, or search query, search first or use bulk_label_matching_emails/apply_labels_to_emails.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"add_labels": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Existing Gmail label IDs to add, not label display names. Mutable system label IDs include INBOX, UNREAD, STARRED, IMPORTANT, SPAM, TRASH, and the CATEGORY_* labels. Gmail assigns SENT and DRAFT; they cannot be added or removed. For user labels, copy list_labels.labels[].id. Prefer apply_labels_to_emails when you have label names or want missing labels created. Do not pass search operators such as -in:trash, ALL, or display names."
+					},
+					"message_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail message IDs returned by Gmail search/read results. Use `message_ids` from search_email_ids or `id` fields from email results. Do not pass placeholder values like `dummy`, `latest`, `gmail:<id>`, draft IDs, thread IDs, email addresses, subjects, or Gmail UI URLs."
+					},
+					"remove_labels": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Existing Gmail label IDs to remove, not label display names. Mutable system label IDs include INBOX, UNREAD, STARRED, IMPORTANT, SPAM, TRASH, and the CATEGORY_* labels. Gmail assigns SENT and DRAFT; they cannot be added or removed. For user labels, copy list_labels.labels[].id. Prefer apply_labels_to_emails when you have label names. Do not pass search operators such as -in:trash, ALL, or display names."
+					}
+				},
+				"required": ["message_ids"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"success": {
+							"type": "boolean"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Adding STARRED and removing UNREAD succeeded. The test then restored the original labels."
+				}
+			],
+			"examples": [
+				{
+					"title": "Restore an inbox message",
+					"request": {
+						"message_ids": ["example-message"],
+						"add_labels": ["INBOX"],
+						"remove_labels": ["TRASH"]
+					},
+					"response": {
+						"success": true
+					}
+				}
+			],
+			"summary": "Add or remove labels on individual messages in a batch."
+		},
+		{
+			"name": "batch_read_email",
+			"runtime_name": "mcp__codex_apps__gmail_batch_read_email",
+			"category": "read",
+			"description": "Read up to 100 Gmail messages as MIME trees, preserving request order. Later IDs are ignored. The action fails if the combined serialized response exceeds 100 MB.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"message_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail message IDs to fetch, in order. At most 100 are read; later entries are ignored."
+					}
+				},
+				"required": ["message_ids"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"internal_date": {
+										"type": "string"
+									},
+									"payload": {
+										"type": "object",
+										"properties": {
+											"part_id": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"filename": {
+												"type": "string"
+											},
+											"headers": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"value": {
+															"type": "string"
+														}
+													}
+												}
+											},
+											"body": {
+												"type": "object",
+												"properties": {
+													"size": {
+														"type": "number"
+													},
+													"base64_url_content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													},
+													"content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													},
+													"attachment_id": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													}
+												}
+											},
+											"read_attachment_supported": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": ["null"]
+											},
+											"parts": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																},
+																"content": {
+																	"type": "string"
+																},
+																"attachment_id": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														},
+														"parts": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														}
+													}
+												}
+											}
+										}
+									},
+									"size_estimate": {
+										"type": "number"
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "A two-message read returned messages in the requested order."
+				}
+			],
+			"examples": [],
+			"summary": "Read up to 100 messages as MIME trees in request order."
+		},
+		{
+			"name": "batch_read_email_threads",
+			"runtime_name": "mcp__codex_apps__gmail_batch_read_email_threads",
+			"category": "read",
+			"description": "Read recent messages from threads identified by message IDs or thread IDs. Supply at least one non-empty `message_ids` or `thread_ids` list; `message_ids` take precedence when both are supplied. Exact duplicate input IDs and duplicate resolved thread IDs are coalesced, preserving the first occurrence. Each thread contains at most `max_messages` messages, ordered from oldest to newest. Later IDs are ignored. The action fails if the combined serialized response exceeds 100 MB.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"max_messages": {
+						"type": "number",
+						"description": "Optional maximum number of messages to include per thread; defaults to 20."
+					},
+					"message_ids": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail message IDs whose conversations should be read. Supply message_ids or thread_ids; message_ids take precedence when both are supplied. At most 100 are read."
+					},
+					"thread_ids": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail thread IDs to read directly. Supply message_ids or thread_ids; message_ids take precedence when both are supplied. At most 100 are read."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"messages": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"thread_id": {
+													"type": "string"
+												},
+												"label_ids": {
+													"type": "array",
+													"items": {
+														"type": "string"
+													}
+												},
+												"snippet": {
+													"type": "string"
+												},
+												"history_id": {
+													"type": "string"
+												},
+												"internal_date": {
+													"type": "string"
+												},
+												"payload": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																},
+																"content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																},
+																"attachment_id": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														},
+														"parts": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"part_id": {
+																		"type": "string"
+																	},
+																	"mime_type": {
+																		"type": "string"
+																	},
+																	"filename": {
+																		"type": "string"
+																	},
+																	"headers": {
+																		"type": "array",
+																		"items": {
+																			"type": "object",
+																			"properties": {
+																				"name": {
+																					"type": "string"
+																				},
+																				"value": {
+																					"type": "string"
+																				}
+																			}
+																		}
+																	},
+																	"body": {
+																		"type": "object",
+																		"properties": {
+																			"size": {
+																				"type": "number"
+																			},
+																			"base64_url_content": {
+																				"description": "Only null was observed. The non-null type is unknown.",
+																				"x-observed-types": ["null"]
+																			},
+																			"content": {
+																				"anyOf": [
+																					{
+																						"type": "string"
+																					},
+																					{
+																						"type": "null"
+																					}
+																				]
+																			},
+																			"attachment_id": {
+																				"anyOf": [
+																					{
+																						"type": "null"
+																					},
+																					{
+																						"type": "string"
+																					}
+																				]
+																			}
+																		}
+																	},
+																	"read_attachment_supported": {
+																		"anyOf": [
+																			{
+																				"type": "null"
+																			},
+																			{
+																				"type": "boolean"
+																			}
+																		]
+																	},
+																	"parts": {
+																		"description": "Only null was observed. The non-null type is unknown.",
+																		"x-observed-types": ["null"]
+																	}
+																}
+															}
+														}
+													}
+												},
+												"size_estimate": {
+													"type": "number"
+												},
+												"classification_label_values": {
+													"description": "Only null was observed. The non-null type is unknown.",
+													"x-observed-types": ["null"]
+												}
+											}
+										}
+									},
+									"snippet": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The tool deduplicated thread IDs. Both thread IDs and message IDs resolved to threads."
+				}
+			],
+			"examples": [],
+			"summary": "Read recent messages from threads selected by message or thread ID."
+		},
+		{
+			"name": "bulk_label_matching_emails",
+			"runtime_name": "mcp__codex_apps__gmail_bulk_label_matching_emails",
+			"category": "organize",
+			"description": "Apply a label to every Gmail message matching a Gmail search query. This action performs the search and label batching server-side, so it is suitable for very large backfills without sending message IDs through the model context.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"archive": {
+						"type": "boolean",
+						"description": "Whether to archive matching messages after labeling them."
+					},
+					"create_label_if_missing": {
+						"type": "boolean",
+						"description": "Whether to create the label first if it does not already exist."
+					},
+					"label_name": {
+						"type": "string",
+						"description": "Label name to apply to all matching messages."
+					},
+					"query": {
+						"type": "string",
+						"description": "Gmail search query used to find messages to label."
+					}
+				},
+				"required": ["label_name", "query"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"label_id": {
+							"type": "string"
+						},
+						"label_name": {
+							"type": "string"
+						},
+						"created_label": {
+							"type": "boolean"
+						},
+						"archived": {
+							"type": "boolean"
+						},
+						"messages_matched": {
+							"type": "number"
+						},
+						"pages_processed": {
+							"type": "number"
+						},
+						"batches_sent": {
+							"type": "number"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "A query verified before the call matched one message. The result reported one page and one modification batch."
+				}
+			],
+			"examples": [],
+			"summary": "Search and label all matching messages on the server."
+		},
+		{
+			"name": "create_draft",
+			"runtime_name": "mcp__codex_apps__gmail_create_draft",
+			"category": "drafts",
+			"description": "Create an unsent Gmail draft from message headers and a MIME tree. Prefer `text/html` by default, even for simple messages; use `text/plain` when the user requests plain text.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"bcc": {
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"classification_label_values": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"fields": {
+											"anyOf": [
+												{
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"field_id": {
+																"type": "string"
+															},
+															"selection": {
+																"anyOf": [
+																	{
+																		"type": "string"
+																	},
+																	{
+																		"const": null,
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": ["field_id"]
+													}
+												},
+												{
+													"const": null,
+													"type": "null"
+												}
+											]
+										},
+										"label_id": {
+											"type": "string"
+										}
+									},
+									"required": ["label_id"]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"from_address": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"payload": {
+						"type": "object",
+						"properties": {
+							"body": {
+								"anyOf": [
+									{
+										"type": "object",
+										"properties": {
+											"base64_url_content": {
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"const": null,
+														"type": "null"
+													}
+												]
+											},
+											"content": {
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"const": null,
+														"type": "null"
+													}
+												]
+											}
+										}
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"charset": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"content_disposition": {
+								"anyOf": [
+									{
+										"const": "inline",
+										"type": "string"
+									},
+									{
+										"const": "attachment",
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"content_id": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"filename": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"mime_type": {
+								"type": "string"
+							},
+							"parts": {
+								"anyOf": [
+									{
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"body": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"base64_url_content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"const": null,
+																			"type": "null"
+																		}
+																	]
+																},
+																"content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"const": null,
+																			"type": "null"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"charset": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"content_disposition": {
+													"anyOf": [
+														{
+															"const": "inline",
+															"type": "string"
+														},
+														{
+															"const": "attachment",
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"content_id": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"filename": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"mime_type": {
+													"type": "string"
+												},
+												"parts": {
+													"anyOf": [
+														{
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"body": {
+																		"anyOf": [
+																			{
+																				"type": "object",
+																				"properties": {
+																					"base64_url_content": {
+																						"anyOf": [
+																							{
+																								"type": "string"
+																							},
+																							{
+																								"const": null,
+																								"type": "null"
+																							}
+																						]
+																					},
+																					"content": {
+																						"anyOf": [
+																							{
+																								"type": "string"
+																							},
+																							{
+																								"const": null,
+																								"type": "null"
+																							}
+																						]
+																					}
+																				}
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"charset": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"content_disposition": {
+																		"anyOf": [
+																			{
+																				"const": "inline",
+																				"type": "string"
+																			},
+																			{
+																				"const": "attachment",
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"content_id": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"filename": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"mime_type": {
+																		"type": "string"
+																	},
+																	"parts": {
+																		"anyOf": [
+																			{
+																				"type": "array",
+																				"items": {}
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	}
+																},
+																"required": ["mime_type"]
+															}
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												}
+											},
+											"required": ["mime_type"]
+										}
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							}
+						},
+						"required": ["mime_type"]
+					},
+					"reply_message_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"reply_to": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"response_fields": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"anyOf": [
+										{
+											"const": "id",
+											"type": "string"
+										},
+										{
+											"const": "message",
+											"type": "string"
+										}
+									]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"subject": {
+						"type": "string"
+					},
+					"to": {
+						"type": "string"
+					}
+				},
+				"required": ["payload", "subject"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"message": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"thread_id": {
+									"type": "string"
+								},
+								"label_ids": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"history_id": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"internal_date": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"payload": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"size_estimate": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"classification_label_values": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "A reply draft included quoted source content and the supplied attachment. The top-level id was the draft ID."
+				}
+			],
+			"examples": [
+				{
+					"title": "Compose a draft",
+					"request": {
+						"to": "recipient@example.com",
+						"subject": "Example subject",
+						"payload": {
+							"mime_type": "text/html",
+							"body": {
+								"content": "<p>Example message.</p>"
+							}
+						}
+					}
+				}
+			],
+			"summary": "Create a draft from headers and a MIME tree."
+		},
+		{
+			"name": "create_label",
+			"runtime_name": "mcp__codex_apps__gmail_create_label",
+			"category": "organize",
+			"description": "Create a Gmail label. Use this when the user wants a new organizational label. If the label already exists, the existing label is returned instead of creating a duplicate.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"label_list_visibility": {
+						"anyOf": [
+							{
+								"const": "labelShow",
+								"type": "string"
+							},
+							{
+								"const": "labelShowIfUnread",
+								"type": "string"
+							},
+							{
+								"const": "labelHide",
+								"type": "string"
+							}
+						],
+						"description": "Visibility of the label itself in Gmail label lists."
+					},
+					"message_list_visibility": {
+						"anyOf": [
+							{
+								"const": "show",
+								"type": "string"
+							},
+							{
+								"const": "hide",
+								"type": "string"
+							}
+						],
+						"description": "Visibility of messages carrying this label in Gmail message lists."
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of the Gmail label to create."
+					}
+				},
+				"required": ["name"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"created": {
+							"type": "boolean"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The first call returned an empty type string. Repeating the label name returned type=user and created=false."
+				}
+			],
+			"examples": [],
+			"summary": "Create a label or return the existing label with that name."
+		},
+		{
+			"name": "delete_emails",
+			"runtime_name": "mcp__codex_apps__gmail_delete_emails",
+			"category": "organize",
+			"description": "Move one or more existing Gmail messages to Trash. Use this when the user wants messages deleted from Gmail. This matches Gmail delete behavior and does not permanently delete the messages.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"message_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail message IDs returned by Gmail search/read results. Use `message_ids` from search_email_ids or `id` fields from email results. Do not pass placeholder values like `dummy`, `latest`, `gmail:<id>`, draft IDs, thread IDs, email addresses, subjects, or Gmail UI URLs."
+					}
+				},
+				"required": ["message_ids"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"message_id": {
+										"type": "string"
+									},
+									"success": {
+										"type": "boolean"
+									},
+									"error": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"detail": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The tool moved a message to Trash. Removing TRASH and adding INBOX restored it. The test did not cover permanent deletion."
+				}
+			],
+			"examples": [
+				{
+					"title": "Move a message to Trash",
+					"request": {
+						"message_ids": ["example-message"]
+					},
+					"response": {
+						"responses": [
+							{
+								"message_id": "example-message",
+								"success": true,
+								"error": null,
+								"detail": null
+							}
+						]
+					}
+				}
+			],
+			"summary": "Move messages to Trash without deleting them permanently."
+		},
+		{
+			"name": "forward_emails",
+			"runtime_name": "mcp__codex_apps__gmail_forward_emails",
+			"category": "send",
+			"description": "Forward Gmail messages with structured MIME content. Each source is sent separately as a `message/rfc822` attachment so its original MIME content and attachments are preserved. Optional `payload` content appears before that attachment and is not parsed as Markdown.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"bcc": {
+						"type": "string",
+						"description": "Optional comma-separated email addresses for the Bcc header."
+					},
+					"cc": {
+						"type": "string",
+						"description": "Optional comma-separated email addresses for the Cc header."
+					},
+					"message_ids": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Gmail message IDs to forward. Empty and duplicate IDs are ignored. At most 10 distinct messages may be forwarded."
+					},
+					"payload": {
+						"anyOf": [
+							{
+								"type": "object",
+								"properties": {
+									"body": {
+										"anyOf": [
+											{
+												"type": "object",
+												"properties": {
+													"base64_url_content": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"const": null,
+																"type": "null"
+															}
+														],
+														"description": "Optional base64url-encoded body bytes for binary content such as images and attachments, or for any content whose exact bytes must be preserved. Set exactly one of `base64_url_content` or `content`."
+													},
+													"content": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"const": null,
+																"type": "null"
+															}
+														],
+														"description": "Optional unencoded text for a `text/*` MIME part, such as `text/plain` or `text/html`. It is encoded with the part's `charset`, which defaults to UTF-8. Set exactly one of `content` or `base64_url_content`."
+													}
+												}
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional body for a leaf MIME part. Set exactly one of `base64_url_content` or `content`. Omit `body` for an empty part."
+									},
+									"charset": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional character encoding for a `text/*` part. Direct `content` defaults to UTF-8. Do not set this field on a non-text part."
+									},
+									"content_disposition": {
+										"anyOf": [
+											{
+												"const": "inline",
+												"type": "string"
+											},
+											{
+												"const": "attachment",
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional Content-Disposition value: `inline` or `attachment`. A part with a filename defaults to `inline` when `content_id` is set and `attachment` otherwise."
+									},
+									"content_id": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional Content ID referenced by `cid:` URLs. Supply the ID without angle brackets. The resulting Content-ID header encloses it in angle brackets."
+									},
+									"filename": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional filename to include in this part's Content-Disposition header."
+									},
+									"mime_type": {
+										"type": "string",
+										"description": "MIME media type for this part, such as `text/plain` or `image/png`."
+									},
+									"parts": {
+										"anyOf": [
+											{
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"body": {
+															"anyOf": [
+																{
+																	"type": "object",
+																	"properties": {
+																		"base64_url_content": {
+																			"anyOf": [
+																				{
+																					"type": "string"
+																				},
+																				{
+																					"const": null,
+																					"type": "null"
+																				}
+																			],
+																			"description": "Optional base64url-encoded body bytes for binary content such as images and attachments, or for any content whose exact bytes must be preserved. Set exactly one of `base64_url_content` or `content`."
+																		},
+																		"content": {
+																			"anyOf": [
+																				{
+																					"type": "string"
+																				},
+																				{
+																					"const": null,
+																					"type": "null"
+																				}
+																			],
+																			"description": "Optional unencoded text for a `text/*` MIME part, such as `text/plain` or `text/html`. It is encoded with the part's `charset`, which defaults to UTF-8. Set exactly one of `content` or `base64_url_content`."
+																		}
+																	}
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional body for a leaf MIME part. Set exactly one of `base64_url_content` or `content`. Omit `body` for an empty part."
+														},
+														"charset": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional character encoding for a `text/*` part. Direct `content` defaults to UTF-8. Do not set this field on a non-text part."
+														},
+														"content_disposition": {
+															"anyOf": [
+																{
+																	"const": "inline",
+																	"type": "string"
+																},
+																{
+																	"const": "attachment",
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional Content-Disposition value: `inline` or `attachment`. A part with a filename defaults to `inline` when `content_id` is set and `attachment` otherwise."
+														},
+														"content_id": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional Content ID referenced by `cid:` URLs. Supply the ID without angle brackets. The resulting Content-ID header encloses it in angle brackets."
+														},
+														"filename": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional filename to include in this part's Content-Disposition header."
+														},
+														"mime_type": {
+															"type": "string",
+															"description": "MIME media type for this part, such as `text/plain` or `image/png`."
+														},
+														"parts": {
+															"anyOf": [
+																{
+																	"type": "array",
+																	"items": {}
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional child parts for a `multipart/*` container. Do not combine `parts` with `body`, `filename`, `content_id`, or `content_disposition`."
+														}
+													},
+													"required": ["mime_type"]
+												}
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional child parts for a `multipart/*` container. Do not combine `parts` with `body`, `filename`, `content_id`, or `content_disposition`."
+									}
+								},
+								"required": ["mime_type"]
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional MIME content to include before each forwarded message."
+					},
+					"response_fields": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"anyOf": [
+										{
+											"const": "id",
+											"type": "string"
+										},
+										{
+											"const": "thread_id",
+											"type": "string"
+										},
+										{
+											"const": "label_ids",
+											"type": "string"
+										},
+										{
+											"const": "snippet",
+											"type": "string"
+										},
+										{
+											"const": "history_id",
+											"type": "string"
+										},
+										{
+											"const": "internal_date",
+											"type": "string"
+										},
+										{
+											"const": "payload",
+											"type": "string"
+										},
+										{
+											"const": "size_estimate",
+											"type": "string"
+										},
+										{
+											"const": "classification_label_values",
+											"type": "string"
+										}
+									]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional message properties to include in the response. Values use the connector's snake_case output property names. Omit this parameter to return the standard response. The local `original_message_id` and per-message error properties are always returned."
+					},
+					"to": {
+						"type": "string",
+						"description": "Comma-separated email addresses for the To header. Use `me` for the authenticated Gmail account."
+					}
+				},
+				"required": ["message_ids", "to"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"history_id": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"internal_date": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"payload": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"size_estimate": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"original_message_id": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The tool attached the original message as message/rfc822. Fields excluded by response_fields remained present as null."
+				}
+			],
+			"examples": [
+				{
+					"title": "Forward a message as an attachment",
+					"request": {
+						"message_ids": ["example-message"],
+						"to": "recipient@example.com"
+					}
+				}
+			],
+			"summary": "Forward each source message as a message/rfc822 attachment."
+		},
+		{
+			"name": "get_profile",
+			"runtime_name": "mcp__codex_apps__gmail_get_profile",
+			"category": "account",
+			"description": "Return the current Gmail user's profile information.",
+			"input_schema": {
+				"type": "object",
+				"properties": {},
+				"additionalProperties": {}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"email": {
+							"type": "string"
+						},
+						"nickname": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"picture": {
+							"type": "string"
+						},
+						"workspace_id": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"workspace_name": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"workspace_picture": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The result included account identity and nullable Workspace fields. It omitted mailbox message totals."
+				}
+			],
+			"examples": [],
+			"summary": "Read the connected account profile."
+		},
+		{
+			"name": "list_drafts",
+			"runtime_name": "mcp__codex_apps__gmail_list_drafts",
+			"category": "drafts",
+			"description": "List Gmail drafts with summarized metadata so they can be reviewed or selected. Use this to review pending drafts or find a draft the user asked about.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"max_results": {
+						"type": "number",
+						"description": "Maximum number of results to return. Must be at least 1."
+					},
+					"next_page_token": {
+						"type": "string",
+						"description": "Pagination token from a previous drafts list."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"drafts": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"draft_id": {
+										"type": "string"
+									},
+									"message_id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"from_": {
+										"type": "string"
+									},
+									"to": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"cc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"bcc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"subject": {
+										"type": "string"
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"labels": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"has_attachment": {
+										"type": "boolean"
+									},
+									"email_ts": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"next_page_token": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Summaries used draft_id and message_id. Draft creation used a top-level id. The test did not follow pagination."
+				}
+			],
+			"examples": [],
+			"summary": "List drafts with summary metadata."
+		},
+		{
+			"name": "list_labels",
+			"runtime_name": "mcp__codex_apps__gmail_list_labels",
+			"category": "organize",
+			"description": "List Gmail labels with per-label counts. Use this for questions like how many emails are in the inbox or unread, because Gmail exposes those totals directly on labels without paging through messages. For unread counts within a specific label, request that label and use its unread totals rather than requesting UNREAD. For search label filters, copy labels[].id, not labels[].name.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"label_names": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional Gmail label display names to filter by. For search label filters, copy labels[].id from the response, not labels[].name."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"labels": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"messageListVisibility": {
+										"type": "string"
+									},
+									"labelListVisibility": {
+										"type": "string"
+									},
+									"messagesTotal": {
+										"type": "number"
+									},
+									"messagesUnread": {
+										"type": "number"
+									},
+									"threadsTotal": {
+										"type": "number"
+									},
+									"threadsUnread": {
+										"type": "number"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Filtered results included message, thread, and unread counts, plus camelCase visibility fields."
+				}
+			],
+			"examples": [],
+			"summary": "List labels with message, thread, and unread counts."
+		},
+		{
+			"name": "read_attachment",
+			"runtime_name": "mcp__codex_apps__gmail_read_attachment",
+			"category": "read",
+			"description": "Read one attachment from a Gmail message. First read/search the parent message and select an entry from its attachments, inline_images, or API-content MIME parts. For an attachments entry or downloadable MIME part, call this action only when its read_attachment_supported field is true; when false, do not call this action because the MIME type is unsupported. Pass the parent message id as message_id. Prefer the entry's non-null attachment_id or MIME part's body.attachment_id when its complete value is available; when it is absent or marked truncated, pass the exact filename instead. Do not synthesize attachment IDs from filenames, content IDs, x-attachment IDs, URLs, or user text. The original attachment is returned as file_uri. Small extracted content and images are included inline. If content_truncated is true, the inline text is only a preview; read extraction_file_uri for the complete extracted content and images as JSON.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"attachment_id": {
+						"type": "string",
+						"description": "Exact Gmail attachment_id copied from the selected attachment's attachments[].attachment_id or inline_images[].attachment_id, or from a downloadable API-content MIME part's body.attachment_id. Use it only when the complete value is available; if it is absent or marked truncated in a tool response, pass the exact filename instead. Do not pass truncated values, filenames, message IDs, thread IDs, Content-ID, X-Attachment-Id, URLs, or guessed values."
+					},
+					"filename": {
+						"type": "string",
+						"description": "Exact attachment filename from the parent message's attachments, inline_images, or API-content MIME parts. Use only when attachment_id is absent, unknown, or marked truncated in the tool response. If multiple attachments share this filename, retry with a complete attachment_id."
+					},
+					"message_id": {
+						"type": "string",
+						"description": "Gmail message ID returned by Gmail search/read results. Use the `id` or `message_id` field from an email result. Do not pass placeholder values like `dummy`, `latest`, `gmail:<id>`, draft IDs, thread IDs, email addresses, subjects, or Gmail UI URLs. Use the parent message ID."
+					}
+				},
+				"required": ["message_id"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"message_id": {
+							"type": "string"
+						},
+						"attachment_id": {
+							"type": "string"
+						},
+						"filename": {
+							"type": "string"
+						},
+						"mime_type": {
+							"type": "string"
+						},
+						"size_bytes": {
+							"type": "number"
+						},
+						"file_uri": {
+							"type": "object",
+							"properties": {
+								"download_url": {
+									"type": "string"
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"file_name": {
+									"type": "string"
+								}
+							}
+						},
+						"content": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"text": {
+										"type": "string"
+									},
+									"annotations": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									},
+									"meta": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						},
+						"images": {
+							"type": "array",
+							"items": {
+								"description": "No array elements were observed. The item type is unknown."
+							}
+						},
+						"content_truncated": {
+							"type": "boolean"
+						},
+						"extraction_file_uri": {
+							"type": "object",
+							"properties": {
+								"download_url": {
+									"type": "string"
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"file_name": {
+									"type": "string"
+								}
+							}
+						},
+						"structuredContent": {
+							"type": "object",
+							"properties": {
+								"message_id": {
+									"type": "string"
+								},
+								"attachment_id": {
+									"type": "string"
+								},
+								"filename": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"size_bytes": {
+									"type": "number"
+								},
+								"content": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"text": {
+												"type": "string"
+											},
+											"annotations": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": ["null"]
+											},
+											"meta": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": ["null"]
+											}
+										}
+									}
+								},
+								"images": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								},
+								"content_truncated": {
+									"type": "boolean"
+								},
+								"file_uri": {
+									"type": "object",
+									"properties": {
+										"download_url": {
+											"type": "string"
+										},
+										"file_id": {
+											"type": "string"
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"file_name": {
+											"type": "string"
+										}
+									}
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"download_url": {
+									"type": "string"
+								},
+								"extraction_file_uri": {
+									"type": "object",
+									"properties": {
+										"download_url": {
+											"type": "string"
+										},
+										"file_id": {
+											"type": "string"
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"file_name": {
+											"type": "string"
+										}
+									}
+								},
+								"__attachments__": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"display_files_from_actions_ext": {
+												"type": "boolean"
+											},
+											"source": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "A PDF read returned an original-file reference, a text preview, content_truncated=true, and a full-extraction reference. Both references were objects."
+				}
+			],
+			"examples": [
+				{
+					"title": "Select an attachment",
+					"request": {
+						"message_id": "example-message",
+						"attachment_id": "example-attachment"
+					}
+				}
+			],
+			"summary": "Read a supported attachment and extract its content."
+		},
+		{
+			"name": "read_email",
+			"runtime_name": "mcp__codex_apps__gmail_read_email",
+			"category": "read",
+			"description": "Read one Gmail message in the requested Gmail API representation. In `full` format, text MIME bodies are returned in `content`, non-text body bytes are returned in `base64_url_content`, and an `attachment_id` identifies content that must be fetched separately.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"format": {
+						"anyOf": [
+							{
+								"const": "full",
+								"type": "string"
+							},
+							{
+								"const": "minimal",
+								"type": "string"
+							},
+							{
+								"const": "metadata",
+								"type": "string"
+							},
+							{
+								"const": "raw",
+								"type": "string"
+							}
+						],
+						"description": "Gmail response representation. `full` returns headers and parsed MIME parts; `minimal` omits headers and body content; `metadata` returns headers without body content; `raw` returns a base64url-encoded RFC 2822 message."
+					},
+					"message_id": {
+						"type": "string",
+						"description": "Immutable Gmail message ID returned by the Gmail API."
+					}
+				},
+				"required": ["message_id"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"thread_id": {
+							"type": "string"
+						},
+						"label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"snippet": {
+							"type": "string"
+						},
+						"history_id": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"internal_date": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"payload": {
+							"anyOf": [
+								{
+									"type": "object",
+									"properties": {
+										"part_id": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"filename": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"headers": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												}
+											}
+										},
+										"body": {
+											"anyOf": [
+												{
+													"type": "object",
+													"properties": {
+														"size": {
+															"type": "number"
+														},
+														"base64_url_content": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														},
+														"content": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														},
+														"attachment_id": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": ["null"]
+														}
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"read_attachment_supported": {
+											"description": "Only null was observed. The non-null type is unknown.",
+											"x-observed-types": ["null"]
+										},
+										"parts": {
+											"anyOf": [
+												{
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"part_id": {
+																"type": "string"
+															},
+															"mime_type": {
+																"type": "string"
+															},
+															"filename": {
+																"type": "string"
+															},
+															"headers": {
+																"type": "array",
+																"items": {
+																	"type": "object",
+																	"properties": {
+																		"name": {
+																			"type": "string"
+																		},
+																		"value": {
+																			"type": "string"
+																		}
+																	}
+																}
+															},
+															"body": {
+																"type": "object",
+																"properties": {
+																	"size": {
+																		"type": "number"
+																	},
+																	"base64_url_content": {
+																		"description": "Only null was observed. The non-null type is unknown.",
+																		"x-observed-types": ["null"]
+																	},
+																	"content": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"attachment_id": {
+																		"anyOf": [
+																			{
+																				"type": "null"
+																			},
+																			{
+																				"type": "string"
+																			}
+																		]
+																	}
+																}
+															},
+															"read_attachment_supported": {
+																"anyOf": [
+																	{
+																		"type": "null"
+																	},
+																	{
+																		"type": "boolean"
+																	}
+																]
+															},
+															"parts": {
+																"description": "Only null was observed. The non-null type is unknown.",
+																"x-observed-types": ["null"]
+															}
+														}
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
+										}
+									}
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"size_estimate": {
+							"anyOf": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"classification_label_values": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"raw": {
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 7,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Tests covered all four formats. Full returned MIME parts and decoded text. Minimal omitted payload. Metadata returned headers. Raw returned base64url RFC 2822. Reading preserved UNREAD."
+				}
+			],
+			"examples": [
+				{
+					"title": "Read a message",
+					"request": {
+						"message_id": "example-message",
+						"format": "full"
+					}
+				}
+			],
+			"summary": "Read a message in full, minimal, metadata, or raw format."
+		},
+		{
+			"name": "read_email_thread",
+			"runtime_name": "mcp__codex_apps__gmail_read_email_thread",
+			"category": "read",
+			"description": "Read the most recent messages in a Gmail thread as headers and MIME parts. Supply at least one of `message_id` or `thread_id`; when both are supplied, `message_id` takes precedence. The response contains at most `max_messages` messages, ordered from oldest to newest.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"max_messages": {
+						"type": "number",
+						"description": "Optional maximum number of messages to include from the thread; defaults to 20."
+					},
+					"message_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail message ID whose conversation should be read. Supply message_id or thread_id; message_id takes precedence when both are supplied."
+					},
+					"thread_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Gmail thread ID to read directly. Supply message_id or thread_id; message_id takes precedence when both are supplied."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"history_id": {
+							"type": "string"
+						},
+						"messages": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"internal_date": {
+										"type": "string"
+									},
+									"payload": {
+										"type": "object",
+										"properties": {
+											"part_id": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"filename": {
+												"type": "string"
+											},
+											"headers": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"value": {
+															"type": "string"
+														}
+													}
+												}
+											},
+											"body": {
+												"type": "object",
+												"properties": {
+													"size": {
+														"type": "number"
+													},
+													"base64_url_content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													},
+													"content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													},
+													"attachment_id": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": ["null"]
+													}
+												}
+											},
+											"read_attachment_supported": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": ["null"]
+											},
+											"parts": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": ["null"]
+																},
+																"content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"type": "null"
+																		}
+																	]
+																},
+																"attachment_id": {
+																	"anyOf": [
+																		{
+																			"type": "null"
+																		},
+																		{
+																			"type": "string"
+																		}
+																	]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"anyOf": [
+																{
+																	"type": "null"
+																},
+																{
+																	"type": "boolean"
+																}
+															]
+														},
+														"parts": {
+															"anyOf": [
+																{
+																	"type": "null"
+																},
+																{
+																	"type": "array",
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"part_id": {
+																				"type": "string"
+																			},
+																			"mime_type": {
+																				"type": "string"
+																			},
+																			"filename": {
+																				"type": "string"
+																			},
+																			"headers": {
+																				"type": "array",
+																				"items": {
+																					"type": "object",
+																					"properties": {
+																						"name": {
+																							"type": "string"
+																						},
+																						"value": {
+																							"type": "string"
+																						}
+																					}
+																				}
+																			},
+																			"body": {
+																				"type": "object",
+																				"properties": {
+																					"size": {
+																						"type": "number"
+																					},
+																					"base64_url_content": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": ["null"]
+																					},
+																					"content": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": ["null"]
+																					},
+																					"attachment_id": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": ["null"]
+																					}
+																				}
+																			},
+																			"read_attachment_supported": {
+																				"description": "Only null was observed. The non-null type is unknown.",
+																				"x-observed-types": ["null"]
+																			},
+																			"parts": {
+																				"type": "array",
+																				"items": {
+																					"type": "object",
+																					"properties": {
+																						"part_id": {
+																							"type": "string"
+																						},
+																						"mime_type": {
+																							"type": "string"
+																						},
+																						"filename": {
+																							"type": "string"
+																						},
+																						"headers": {
+																							"type": "array",
+																							"items": {
+																								"type": "object",
+																								"properties": {
+																									"name": {
+																										"type": "string"
+																									},
+																									"value": {
+																										"type": "string"
+																									}
+																								}
+																							}
+																						},
+																						"body": {
+																							"type": "object",
+																							"properties": {
+																								"size": {
+																									"type": "number"
+																								},
+																								"base64_url_content": {
+																									"description": "Only null was observed. The non-null type is unknown.",
+																									"x-observed-types": ["null"]
+																								},
+																								"content": {
+																									"type": "string"
+																								},
+																								"attachment_id": {
+																									"description": "Only null was observed. The non-null type is unknown.",
+																									"x-observed-types": ["null"]
+																								}
+																							}
+																						},
+																						"read_attachment_supported": {
+																							"description": "Only null was observed. The non-null type is unknown.",
+																							"x-observed-types": ["null"]
+																						},
+																						"parts": {
+																							"description": "Only null was observed. The non-null type is unknown.",
+																							"x-observed-types": ["null"]
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															]
+														}
+													}
+												}
+											}
+										}
+									},
+									"size_estimate": {
+										"type": "number"
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": ["null"]
+									}
+								}
+							}
+						},
+						"snippet": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						}
+					}
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"error_code": {
+							"type": "string"
+						},
+						"error_data": {
+							"type": "object",
+							"properties": {
+								"type": {
+									"type": "string"
+								},
+								"code": {
+									"type": "string"
+								},
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"successful_probe_count": 3,
+				"error_probe_count": 1
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "With max_messages=2, the tool returned both messages, oldest first. With max_messages=1, it returned only the newer message."
+				}
+			],
+			"examples": [],
+			"summary": "Read recent messages in a thread as headers and MIME parts."
+		},
+		{
+			"name": "search_email_ids",
+			"runtime_name": "mcp__codex_apps__gmail_search_email_ids",
+			"category": "read",
+			"description": "Retrieve Gmail message IDs that match a search. If the user asks for important emails, search likely candidates and read/interpret them instead of treating Gmail system labels as the answer. Prefer list_labels for label counts. Put Gmail search operators in query, not label_ids.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"label_ids": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional Gmail label IDs, not Gmail search operators and not display names. Use exact system label IDs such as INBOX, UNREAD, STARRED, IMPORTANT, SENT, DRAFT, SPAM, TRASH, CHAT, CATEGORY_PERSONAL, CATEGORY_SOCIAL, CATEGORY_PROMOTIONS, CATEGORY_UPDATES, and CATEGORY_FORUMS. For user labels, use the account-specific ID returned in list_labels.labels[].id. Put Gmail search syntax such as -in:spam, -in:trash, -category:promotions, label:Newsletters, category:promotions, newer_than:7d, or from:sender@example.com in query. Do not pass ALL, label display names like Newsletters, or custom names like Projects/Waiting unless list_labels returned that exact value as id."
+					},
+					"max_results": {
+						"type": "number",
+						"description": "Maximum number of results to return. Must be at least 1."
+					},
+					"next_page_token": {
+						"type": "string",
+						"description": "Pagination token from a previous search."
+					},
+					"query": {
+						"type": "string",
+						"description": "Gmail search query. Put Gmail search operators here, including -in:spam, -in:trash, -category:promotions, category:promotions, label:<display name>, from:, to:, after:, before:, newer_than:, and has:attachment."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"message_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"next_page_token": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"error_code": {
+							"type": "string"
+						},
+						"error_data": {
+							"type": "object",
+							"properties": {
+								"reason": {
+									"type": "string"
+								},
+								"clamp_errors": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"path": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"message": {
+												"type": "string"
+											},
+											"keyword": {
+												"type": "string"
+											},
+											"value": {
+												"type": "number"
+											}
+										}
+									}
+								},
+								"clamp_rewrites": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						}
+					}
+				},
+				"successful_probe_count": 3,
+				"error_probe_count": 1
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Pagination worked. Setting max_results=0 returned INVALID_ARGUMENT."
+				}
+			],
+			"examples": [
+				{
+					"title": "Search IDs",
+					"request": {
+						"query": "is:unread",
+						"max_results": 5
+					},
+					"response": {
+						"message_ids": ["example-message"],
+						"next_page_token": null
+					}
+				}
+			],
+			"summary": "Search for message IDs with pagination."
+		},
+		{
+			"name": "search_emails",
+			"runtime_name": "mcp__codex_apps__gmail_search_emails",
+			"category": "read",
+			"description": "Search Gmail for emails matching a query or exact label IDs. If the user asks for important emails, search likely candidates and read/interpret them instead of treating Gmail system labels as the answer. Prefer list_labels for count questions about inbox, unread, or other label totals. Put all Gmail search operators in query, including after:, before:, from:, to:, subject:, has:attachment, -in:spam, -in:trash, -category:promotions, and label:<display name>. Examples: query=\"-in:spam -in:trash\", label_ids=None; query=\"\", label_ids=[\"INBOX\", \"UNREAD\"]; query=\"label:Newsletters newer_than:30d\", label_ids=None. Non-examples: label_ids=[\"-in:spam\"], label_ids=[\"ALL\"], label_ids=[\"Newsletters\"].",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"label_ids": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional Gmail label IDs, not Gmail search operators and not display names. Use exact system label IDs such as INBOX, UNREAD, STARRED, IMPORTANT, SENT, DRAFT, SPAM, TRASH, CHAT, CATEGORY_PERSONAL, CATEGORY_SOCIAL, CATEGORY_PROMOTIONS, CATEGORY_UPDATES, and CATEGORY_FORUMS. For user labels, use the account-specific ID returned in list_labels.labels[].id. Put Gmail search syntax such as -in:spam, -in:trash, -category:promotions, label:Newsletters, category:promotions, newer_than:7d, or from:sender@example.com in query. Do not pass ALL, label display names like Newsletters, or custom names like Projects/Waiting unless list_labels returned that exact value as id."
+					},
+					"max_results": {
+						"type": "number",
+						"description": "Maximum number of results to return. Must be at least 1."
+					},
+					"next_page_token": {
+						"type": "string",
+						"description": "Pagination token from a previous search."
+					},
+					"query": {
+						"type": "string",
+						"description": "Gmail search query. Put Gmail search operators here, including -in:spam, -in:trash, -category:promotions, category:promotions, label:<display name>, from:, to:, after:, before:, newer_than:, and has:attachment."
+					}
+				}
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"emails": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"from_": {
+										"type": "string"
+									},
+									"to": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"cc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"bcc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"subject": {
+										"type": "string"
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"labels": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"has_attachment": {
+										"type": "boolean"
+									},
+									"attachments": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"filename": {
+													"type": "string"
+												},
+												"mime_type": {
+													"type": "string"
+												},
+												"size_bytes": {
+													"type": "number"
+												},
+												"attachment_id": {
+													"type": "string"
+												},
+												"read_attachment_supported": {
+													"type": "boolean"
+												}
+											}
+										}
+									},
+									"inline_images": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"email_ts": {
+										"type": "string"
+									},
+									"display_url": {
+										"type": "string"
+									},
+									"display_title": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"next_page_token": {
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 5,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "Search returned message summaries, attachment metadata, and an opaque pagination token. A query with no matches returned an empty array."
+				}
+			],
+			"examples": [
+				{
+					"title": "Search message summaries",
+					"request": {
+						"query": "from:sender@example.com subject:Example",
+						"max_results": 5
+					},
+					"response": {
+						"emails": [
+							{
+								"id": "example-message",
+								"thread_id": "example-thread",
+								"from_": "sender@example.com",
+								"to": ["recipient@example.com"],
+								"cc": [],
+								"bcc": [],
+								"subject": "Example subject",
+								"snippet": "Example message text.",
+								"labels": ["INBOX"],
+								"has_attachment": false,
+								"attachments": [],
+								"inline_images": [],
+								"email_ts": "2026-10-24T00:00:00Z",
+								"display_url": "https://example.com/message",
+								"display_title": "Example subject"
+							}
+						],
+						"next_page_token": null
+					}
+				}
+			],
+			"summary": "Search for message summaries by query or label ID."
+		},
+		{
+			"name": "send_draft",
+			"runtime_name": "mcp__codex_apps__gmail_send_draft",
+			"category": "send",
+			"description": "Send an existing Gmail draft as currently stored. Use this only after the user has reviewed the saved draft or explicitly asked to send that draft.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"draft_id": {
+						"type": "string",
+						"description": "Gmail draft ID returned by create_draft, update_draft, or list_drafts as `draft_id`. Do not pass the draft's underlying message_id, thread_id, subject, recipient email, placeholder values, or Gmail UI URLs."
+					}
+				},
+				"required": ["draft_id"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						},
+						"labelIds": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The result used a new sent-message ID and camelCase threadId and labelIds. Other send tools used snake_case."
+				}
+			],
+			"examples": [
+				{
+					"title": "Send a stored draft",
+					"request": {
+						"draft_id": "example-draft"
+					},
+					"response": {
+						"id": "example-sent-message",
+						"threadId": "example-thread",
+						"labelIds": ["SENT"]
+					}
+				}
+			],
+			"summary": "Send a saved draft with its current content."
+		},
+		{
+			"name": "send_email",
+			"runtime_name": "mcp__codex_apps__gmail_send_email",
+			"category": "send",
+			"description": "Send a Gmail message now from the authenticated account. Supply message headers and a MIME tree. Set `to` to `me` to send to the authenticated Gmail account. Use `create_draft` if the user should review the message first. Prefer `text/html` by default, even for simple messages; use `text/plain` when the user requests plain text.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"bcc": {
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"classification_label_values": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"fields": {
+											"anyOf": [
+												{
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"field_id": {
+																"type": "string"
+															},
+															"selection": {
+																"anyOf": [
+																	{
+																		"type": "string"
+																	},
+																	{
+																		"const": null,
+																		"type": "null"
+																	}
+																]
+															}
+														},
+														"required": ["field_id"]
+													}
+												},
+												{
+													"const": null,
+													"type": "null"
+												}
+											]
+										},
+										"label_id": {
+											"type": "string"
+										}
+									},
+									"required": ["label_id"]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"from_address": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"payload": {
+						"type": "object",
+						"properties": {
+							"body": {
+								"anyOf": [
+									{
+										"type": "object",
+										"properties": {
+											"base64_url_content": {
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"const": null,
+														"type": "null"
+													}
+												]
+											},
+											"content": {
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"const": null,
+														"type": "null"
+													}
+												]
+											}
+										}
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"charset": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"content_disposition": {
+								"anyOf": [
+									{
+										"const": "inline",
+										"type": "string"
+									},
+									{
+										"const": "attachment",
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"content_id": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"filename": {
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							},
+							"mime_type": {
+								"type": "string"
+							},
+							"parts": {
+								"anyOf": [
+									{
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"body": {
+													"anyOf": [
+														{
+															"type": "object",
+															"properties": {
+																"base64_url_content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"const": null,
+																			"type": "null"
+																		}
+																	]
+																},
+																"content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"const": null,
+																			"type": "null"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"charset": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"content_disposition": {
+													"anyOf": [
+														{
+															"const": "inline",
+															"type": "string"
+														},
+														{
+															"const": "attachment",
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"content_id": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"filename": {
+													"anyOf": [
+														{
+															"type": "string"
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												},
+												"mime_type": {
+													"type": "string"
+												},
+												"parts": {
+													"anyOf": [
+														{
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"body": {
+																		"anyOf": [
+																			{
+																				"type": "object",
+																				"properties": {
+																					"base64_url_content": {
+																						"anyOf": [
+																							{
+																								"type": "string"
+																							},
+																							{
+																								"const": null,
+																								"type": "null"
+																							}
+																						]
+																					},
+																					"content": {
+																						"anyOf": [
+																							{
+																								"type": "string"
+																							},
+																							{
+																								"const": null,
+																								"type": "null"
+																							}
+																						]
+																					}
+																				}
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"charset": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"content_disposition": {
+																		"anyOf": [
+																			{
+																				"const": "inline",
+																				"type": "string"
+																			},
+																			{
+																				"const": "attachment",
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"content_id": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"filename": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"mime_type": {
+																		"type": "string"
+																	},
+																	"parts": {
+																		"anyOf": [
+																			{
+																				"type": "array",
+																				"items": {}
+																			},
+																			{
+																				"const": null,
+																				"type": "null"
+																			}
+																		]
+																	}
+																},
+																"required": ["mime_type"]
+															}
+														},
+														{
+															"const": null,
+															"type": "null"
+														}
+													]
+												}
+											},
+											"required": ["mime_type"]
+										}
+									},
+									{
+										"const": null,
+										"type": "null"
+									}
+								]
+							}
+						},
+						"required": ["mime_type"]
+					},
+					"reply_message_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"reply_to": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"response_fields": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"anyOf": [
+										{
+											"const": "id",
+											"type": "string"
+										},
+										{
+											"const": "thread_id",
+											"type": "string"
+										},
+										{
+											"const": "label_ids",
+											"type": "string"
+										},
+										{
+											"const": "snippet",
+											"type": "string"
+										},
+										{
+											"const": "history_id",
+											"type": "string"
+										},
+										{
+											"const": "internal_date",
+											"type": "string"
+										},
+										{
+											"const": "payload",
+											"type": "string"
+										},
+										{
+											"const": "size_estimate",
+											"type": "string"
+										},
+										{
+											"const": "classification_label_values",
+											"type": "string"
+										}
+									]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						]
+					},
+					"subject": {
+						"type": "string"
+					},
+					"to": {
+						"type": "string"
+					}
+				},
+				"required": ["payload", "subject", "to"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"thread_id": {
+							"type": "string"
+						},
+						"label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"snippet": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"history_id": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"internal_date": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"payload": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"size_estimate": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						},
+						"classification_label_values": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": ["null"]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "The result used snake_case message fields. Several expanded fields were null. A later read confirmed threading and quoted source content."
+				}
+			],
+			"examples": [
+				{
+					"title": "Compose a message",
+					"request": {
+						"to": "recipient@example.com",
+						"subject": "Example subject",
+						"payload": {
+							"mime_type": "text/html",
+							"body": {
+								"content": "<p>Example message.</p>"
+							}
+						}
+					}
+				}
+			],
+			"summary": "Send a message from headers and a MIME tree."
+		},
+		{
+			"name": "update_draft",
+			"runtime_name": "mcp__codex_apps__gmail_update_draft",
+			"category": "drafts",
+			"description": "Patch selected fields in an existing Gmail draft. This action has sparse patch semantics: omitted or null fields preserve the current draft. An empty string clears a supplied header. Omitting `payload` preserves the complete MIME tree, including attachments; supplying `payload` replaces that MIME tree. When replacing `payload`, prefer `text/html` by default, even for simple messages; use `text/plain` when the user requests plain text.",
+			"input_schema": {
+				"type": "object",
+				"properties": {
+					"bcc": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement Bcc header; omit to preserve it or set an empty string to clear it."
+					},
+					"cc": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement Cc header; omit to preserve it or set an empty string to clear it."
+					},
+					"classification_label_values": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"fields": {
+											"anyOf": [
+												{
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"field_id": {
+																"type": "string",
+																"description": "Organization-specific field ID from a Workspace classification label schema."
+															},
+															"selection": {
+																"anyOf": [
+																	{
+																		"type": "string"
+																	},
+																	{
+																		"const": null,
+																		"type": "null"
+																	}
+																],
+																"description": "Optional organization-specific choice ID from the classification label schema. Set this only for a selection field."
+															}
+														},
+														"required": ["field_id"]
+													}
+												},
+												{
+													"const": null,
+													"type": "null"
+												}
+											],
+											"description": "Optional values for fields defined by the classification label schema."
+										},
+										"label_id": {
+											"type": "string",
+											"description": "Organization-specific Google Workspace classification label ID. This is not a Gmail mailbox label ID such as INBOX."
+										}
+									},
+									"required": ["label_id"]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement classification labels; omit to preserve them or set an empty list to clear them."
+					},
+					"draft_id": {
+						"type": "string",
+						"description": "ID of the Gmail draft to patch."
+					},
+					"from_address": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement From header; omit to preserve it or set an empty string to clear it."
+					},
+					"payload": {
+						"anyOf": [
+							{
+								"type": "object",
+								"properties": {
+									"body": {
+										"anyOf": [
+											{
+												"type": "object",
+												"properties": {
+													"base64_url_content": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"const": null,
+																"type": "null"
+															}
+														],
+														"description": "Optional base64url-encoded body bytes for binary content such as images and attachments, or for any content whose exact bytes must be preserved. Set exactly one of `base64_url_content` or `content`."
+													},
+													"content": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"const": null,
+																"type": "null"
+															}
+														],
+														"description": "Optional unencoded text for a `text/*` MIME part, such as `text/plain` or `text/html`. It is encoded with the part's `charset`, which defaults to UTF-8. Set exactly one of `content` or `base64_url_content`."
+													}
+												}
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional body for a leaf MIME part. Set exactly one of `base64_url_content` or `content`. Omit `body` for an empty part."
+									},
+									"charset": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional character encoding for a `text/*` part. Direct `content` defaults to UTF-8. Do not set this field on a non-text part."
+									},
+									"content_disposition": {
+										"anyOf": [
+											{
+												"const": "inline",
+												"type": "string"
+											},
+											{
+												"const": "attachment",
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional Content-Disposition value: `inline` or `attachment`. A part with a filename defaults to `inline` when `content_id` is set and `attachment` otherwise."
+									},
+									"content_id": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional Content ID referenced by `cid:` URLs. Supply the ID without angle brackets. The resulting Content-ID header encloses it in angle brackets."
+									},
+									"filename": {
+										"anyOf": [
+											{
+												"type": "string"
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional filename to include in this part's Content-Disposition header."
+									},
+									"mime_type": {
+										"type": "string",
+										"description": "MIME media type for this part, such as `text/plain` or `image/png`."
+									},
+									"parts": {
+										"anyOf": [
+											{
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"body": {
+															"anyOf": [
+																{
+																	"type": "object",
+																	"properties": {
+																		"base64_url_content": {
+																			"anyOf": [
+																				{
+																					"type": "string"
+																				},
+																				{
+																					"const": null,
+																					"type": "null"
+																				}
+																			],
+																			"description": "Optional base64url-encoded body bytes for binary content such as images and attachments, or for any content whose exact bytes must be preserved. Set exactly one of `base64_url_content` or `content`."
+																		},
+																		"content": {
+																			"anyOf": [
+																				{
+																					"type": "string"
+																				},
+																				{
+																					"const": null,
+																					"type": "null"
+																				}
+																			],
+																			"description": "Optional unencoded text for a `text/*` MIME part, such as `text/plain` or `text/html`. It is encoded with the part's `charset`, which defaults to UTF-8. Set exactly one of `content` or `base64_url_content`."
+																		}
+																	}
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional body for a leaf MIME part. Set exactly one of `base64_url_content` or `content`. Omit `body` for an empty part."
+														},
+														"charset": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional character encoding for a `text/*` part. Direct `content` defaults to UTF-8. Do not set this field on a non-text part."
+														},
+														"content_disposition": {
+															"anyOf": [
+																{
+																	"const": "inline",
+																	"type": "string"
+																},
+																{
+																	"const": "attachment",
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional Content-Disposition value: `inline` or `attachment`. A part with a filename defaults to `inline` when `content_id` is set and `attachment` otherwise."
+														},
+														"content_id": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional Content ID referenced by `cid:` URLs. Supply the ID without angle brackets. The resulting Content-ID header encloses it in angle brackets."
+														},
+														"filename": {
+															"anyOf": [
+																{
+																	"type": "string"
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional filename to include in this part's Content-Disposition header."
+														},
+														"mime_type": {
+															"type": "string",
+															"description": "MIME media type for this part, such as `text/plain` or `image/png`."
+														},
+														"parts": {
+															"anyOf": [
+																{
+																	"type": "array",
+																	"items": {}
+																},
+																{
+																	"const": null,
+																	"type": "null"
+																}
+															],
+															"description": "Optional child parts for a `multipart/*` container. Do not combine `parts` with `body`, `filename`, `content_id`, or `content_disposition`."
+														}
+													},
+													"required": ["mime_type"]
+												}
+											},
+											{
+												"const": null,
+												"type": "null"
+											}
+										],
+										"description": "Optional child parts for a `multipart/*` container. Do not combine `parts` with `body`, `filename`, `content_id`, or `content_disposition`."
+									}
+								},
+								"required": ["mime_type"]
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement root MIME part; omit it to preserve the current MIME tree and its attachments. When replacing, include any quoted history you want to keep; update_draft does not append quotes."
+					},
+					"reply_message_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional Gmail message ID whose reply context replaces the draft's."
+					},
+					"reply_to": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement Reply-To header; omit to preserve it or set an empty string to clear it."
+					},
+					"response_fields": {
+						"anyOf": [
+							{
+								"type": "array",
+								"items": {
+									"anyOf": [
+										{
+											"const": "id",
+											"type": "string"
+										},
+										{
+											"const": "message",
+											"type": "string"
+										}
+									]
+								}
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Optional top-level draft properties to include in the response. Values use the connector's output property names. Omit this parameter to return the standard response."
+					},
+					"subject": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement Subject header; omit to preserve it or set an empty string to clear it."
+					},
+					"to": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"const": null,
+								"type": "null"
+							}
+						],
+						"description": "Replacement To header; omit to preserve it or set an empty string to clear it."
+					}
+				},
+				"required": ["draft_id"]
+			},
+			"input_evidence": "reconstructed",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"message": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"thread_id": {
+									"type": "string"
+								},
+								"label_ids": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"history_id": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"internal_date": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"payload": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"size_estimate": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								},
+								"classification_label_values": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": ["null"]
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			},
+			"behavior": [
+				{
+					"evidence": "observed",
+					"text": "A header-only patch preserved the MIME body, attachment, and quotation. The draft ID stayed the same. Its message ID changed."
+				}
+			],
+			"examples": [
+				{
+					"title": "Update a draft header",
+					"request": {
+						"draft_id": "example-draft",
+						"subject": "Updated example subject"
+					}
+				}
+			],
+			"summary": "Patch draft fields. Omitting payload preserves the MIME tree and attachments."
+		}
+	],
+	"updated_on": "2026-10-25"
+}

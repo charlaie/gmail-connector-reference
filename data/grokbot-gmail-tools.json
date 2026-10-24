@@ -1,0 +1,1093 @@
+{
+	"format": "gmail-connector-tool-definitions/v1",
+	"id": "grokbot",
+	"title": "Grok Bot / Cursor Gmail",
+	"captured_on": "2026-10-24",
+	"namespace": "user-Gmail",
+	"provenance": {
+		"input_evidence": "captured-json-schema",
+		"note": "Tool definitions exposed by each product. ChatGPT input schemas come from TypeScript declarations. Grok input schemas come from captured JSON Schema. This export is not an original tools/list response."
+	},
+	"tools": [
+		{
+			"name": "apply_sensitive_message_label",
+			"description": "Move one Gmail message to the trash or mark it as spam; the rest of its thread stays where it is. To act on a whole thread, use apply_sensitive_thread_label. Returns the message's updated labels as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The message id, from search_emails or get_thread."
+					},
+					"labelOption": {
+						"type": "string",
+						"enum": [
+							"TRASH",
+							"SPAM"
+						],
+						"description": "TRASH moves it to the trash (untrash_email reverses it); SPAM marks it as spam, adding SPAM and removing INBOX (unmark_email_spam reverses it)."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"messageId",
+					"labelOption"
+				]
+			}
+		},
+		{
+			"name": "apply_sensitive_thread_label",
+			"description": "Move one whole Gmail thread to the trash or mark it as spam: every message in the thread. Returns the thread id as JSON (per-message labels via get_thread).",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"threadId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The thread id, from search_emails."
+					},
+					"labelOption": {
+						"type": "string",
+						"enum": [
+							"TRASH",
+							"SPAM"
+						],
+						"description": "TRASH moves it to the trash (untrash_email reverses it); SPAM marks it as spam, adding SPAM and removing INBOX (unmark_email_spam reverses it)."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"threadId",
+					"labelOption"
+				]
+			}
+		},
+		{
+			"name": "create_draft",
+			"description": "Create a Gmail draft (plain text, with an optional HTML alternative). Pass replyToMessageId to draft a reply in that message's thread with correct threading headers; a reply names its recipients like a new email, in to (and cc to reply all). The user reviews and sends drafts themselves unless a send tool is used. Returns the draft id as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\"). Required, replies included: a reply goes to the original's Reply-To, else its From, as read_email shows them.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"default": "",
+						"type": "string",
+						"description": "Subject line. For replies the original message's subject is reused (Re:-prefixed) so Gmail threads the draft; this value is the fallback when the original has no subject."
+					},
+					"body": {
+						"default": "",
+						"type": "string",
+						"maxLength": 1000000,
+						"description": "Plain-text message body."
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Draft a reply to this Gmail message id, threading it correctly.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address. Must be the account's own address or one of its verified send-as aliases (see list_send_as). Omit to use the account's default.",
+						"type": "string"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": [
+								"content"
+							],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "create_label",
+			"description": "Create a Gmail user label. Nest with \"/\" in the name (\"Clients/Acme\"). Returns the new label (id, name) as JSON; use the id with update_email_labels and search_emails.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 225,
+						"description": "The label name."
+					},
+					"labelListVisibility": {
+						"description": "Sidebar visibility (default labelShow).",
+						"type": "string",
+						"enum": [
+							"labelShow",
+							"labelShowIfUnread",
+							"labelHide"
+						]
+					},
+					"messageListVisibility": {
+						"description": "Message-list visibility (default show).",
+						"type": "string",
+						"enum": [
+							"show",
+							"hide"
+						]
+					},
+					"textColor": {
+						"description": "Label text color as hex; must be from Gmail's fixed palette, set together with backgroundColor.",
+						"type": "string"
+					},
+					"backgroundColor": {
+						"description": "Label background color as hex; must be from Gmail's fixed palette, set together with textColor.",
+						"type": "string"
+					},
+					"colorPreset": {
+						"description": "Label color from Gmail's preset tiles. textColor and backgroundColor, when set, win over it.",
+						"type": "string",
+						"enum": [
+							"LABEL_COLOR_PRESET_UNSPECIFIED",
+							"LABEL_COLOR_PRESET_BLACK",
+							"LABEL_COLOR_PRESET_DARK_GRAY",
+							"LABEL_COLOR_PRESET_GRAY",
+							"LABEL_COLOR_PRESET_LIGHT_GRAY",
+							"LABEL_COLOR_PRESET_WHITE",
+							"LABEL_COLOR_PRESET_RED",
+							"LABEL_COLOR_PRESET_ORANGE",
+							"LABEL_COLOR_PRESET_YELLOW",
+							"LABEL_COLOR_PRESET_GREEN",
+							"LABEL_COLOR_PRESET_MINT",
+							"LABEL_COLOR_PRESET_TEAL",
+							"LABEL_COLOR_PRESET_BLUE",
+							"LABEL_COLOR_PRESET_PURPLE",
+							"LABEL_COLOR_PRESET_PINK",
+							"LABEL_COLOR_PRESET_DARK_RED",
+							"LABEL_COLOR_PRESET_DARK_ORANGE",
+							"LABEL_COLOR_PRESET_DARK_GREEN",
+							"LABEL_COLOR_PRESET_DARK_BLUE",
+							"LABEL_COLOR_PRESET_DARK_PURPLE",
+							"LABEL_COLOR_PRESET_DARK_PINK",
+							"LABEL_COLOR_PRESET_BROWN"
+						]
+					},
+					"autoCreateParentLabels": {
+						"description": "Create the missing parent labels of a nested name first, so \"Projects/Alpha\" also creates \"Projects\" (default true).",
+						"type": "boolean"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"name"
+				]
+			}
+		},
+		{
+			"name": "delete_draft",
+			"description": "Delete a Gmail draft permanently (drafts skip the trash; this cannot be undone). Sent mail is unaffected. Returns a confirmation as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The draft id to delete."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"draftId"
+				]
+			}
+		},
+		{
+			"name": "delete_label",
+			"description": "Delete a Gmail user label by id, removing it from every message it is applied to (the messages themselves are untouched; system labels cannot be deleted). This cannot be undone. Returns a confirmation as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"labelId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The label id, from list_labels."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"labelId"
+				]
+			}
+		},
+		{
+			"name": "forward",
+			"description": "Forward a Gmail message to new recipients, with an optional note above the quoted original: comment as plain text, htmlBody as HTML. Name each attachment to send along in `attachments`, as read_email lists it; the others are noted in the body by name. Returns the sent message id as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail message id to forward."
+					},
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\").",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"comment": {
+						"description": "Optional plain-text note placed above the quoted original.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the note, placed above the quoted original in the message's HTML part. Without comment, its text is the plain-text note.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"attachments": {
+						"description": "Filenames of the original's attachments to send along, exactly as read_email lists them. A name that more than one attachment shares is refused. Omit to forward the text only.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"messageId",
+					"to"
+				]
+			}
+		},
+		{
+			"name": "get_draft",
+			"description": "Read one Gmail draft: envelope headers and the text body (same extraction as read_email). `draftId` comes from list_drafts or create_draft.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail draft id."
+					},
+					"maxChars": {
+						"description": "Character cap on the body (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"draftId"
+				]
+			}
+		},
+		{
+			"name": "get_me",
+			"description": "Get the signed-in Gmail account's profile (email address, message totals). Useful to confirm which account is connected.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "get_thread",
+			"description": "Get a Gmail thread: every message in order with its envelope, text body (plain text preferred, HTML stripped to text otherwise) and attachment names. The bodies share the maxChars budget; read a message marked truncated with read_email. `threadId` comes from search_emails results. Each attachment includes its Gmail attachmentId; DownloadFile takes source.fileId as \"<message id>/<attachmentId>\".",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"threadId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail thread id."
+					},
+					"maxChars": {
+						"description": "Character budget shared by the message bodies (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"threadId"
+				]
+			}
+		},
+		{
+			"name": "list_drafts",
+			"description": "List the account's Gmail drafts, newest first, with each draft's envelope (to, subject, snippet). Returns draft ids for get_draft, update_draft, delete_draft and send_draft; pass `nextPageToken` back as pageToken for more.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"maxResults": {
+						"description": "Drafts per page (default 10, max 25).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 25
+					},
+					"pageToken": {
+						"description": "The `nextPageToken` from a previous response, verbatim.",
+						"type": "string"
+					},
+					"query": {
+						"description": "Gmail search query to filter drafts (same grammar as search_emails).",
+						"type": "string"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "list_filters",
+			"description": "List the Gmail account's filters: each filter's id, its matching criteria (from, to, subject, query, negatedQuery, hasAttachment, size) and the action applied to matching mail (labels added or removed). Pass nextPageToken back as pageToken for more. Returns Gmail JSON; {} means no filters.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"pageSize": {
+						"description": "Filters per page (default 20, max 50).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 50
+					},
+					"pageToken": {
+						"description": "nextPageToken from the previous list_filters call.",
+						"type": "string",
+						"pattern": "^\\d+$"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "list_labels",
+			"description": "List the Gmail account's labels (system and user) with their ids, for search_emails labelIds filters. Returns raw Gmail JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "list_send_as",
+			"description": "List the addresses this Gmail account can send from: its own address and its send-as aliases. Entries with isPrimary true or verificationStatus \"accepted\" can be passed as `from` to create_draft or send_email. Returns raw Gmail JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "mark_email_spam",
+			"description": "Mark Gmail mail as spam: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). Adds SPAM and removes INBOX. For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "trash_email",
+			"description": "Move Gmail mail to the trash: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Gmail purges trashed mail after ~30 days; untrash_email reverses it before then. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "unmark_email_spam",
+			"description": "Unmark Gmail mail as spam: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). Removes SPAM and restores INBOX. For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "untrash_email",
+			"description": "Restore Gmail mail from the trash: one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Returns the updated labels as JSON (thread targets return the id alone; messageIds returns how many messages were changed).",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to act on.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to act on (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "read_email",
+			"description": "Read one Gmail message: envelope headers, the text body (plain text preferred, HTML stripped to text otherwise), and the names of any attachments. Attachment bytes are not returned; use download_file where available. `messageId` comes from search_emails or a thread. Each attachment includes its Gmail attachmentId; DownloadFile takes source.fileId as \"<message id>/<attachmentId>\".",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The Gmail message id."
+					},
+					"maxChars": {
+						"description": "Character cap on the body (default 50000, max 200000).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 200000
+					},
+					"messageFormat": {
+						"description": "What to return (default PLAIN_TEXT). PLAIN_TEXT: the envelope, the text body (HTML converted to text when there is no plain part) and attachment names. FULL_CONTENT: PLAIN_TEXT plus htmlBody, the HTML part as sent. MINIMAL: the envelope alone, no body. METADATA_ONLY: MINIMAL without subject and snippet. RAW: the RFC 822 source, capped by maxChars.",
+						"type": "string",
+						"enum": [
+							"MINIMAL",
+							"FULL_CONTENT",
+							"METADATA_ONLY",
+							"PLAIN_TEXT",
+							"RAW"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"messageId"
+				]
+			}
+		},
+		{
+			"name": "search_emails",
+			"description": "Search Gmail with Gmail's own query grammar (e.g. \"from:sender@example.com is:unread newer_than:7d\", \"subject:invoice has:attachment\"). Returns each match's envelope (from, to, subject, date, labels, snippet); pass `nextPageToken` back as pageToken for more. Use read_email for a message's content. For bulk changes, set idsOnly to list just message and thread ids, then pass them as messageIds to update_email_labels, trash_email or mark_email_spam in one call.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"query": {
+						"description": "Gmail search query. Omit to list the most recent messages.",
+						"type": "string"
+					},
+					"labelIds": {
+						"description": "Restrict to these label ids (e.g. [\"INBOX\"], [\"SENT\"]).",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"maxResults": {
+						"description": "Messages per page (default 20, max 25; with idsOnly, default 100, max 500).",
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 500
+					},
+					"pageToken": {
+						"description": "The `nextPageToken` from a previous response, verbatim.",
+						"type": "string"
+					},
+					"includeSpamTrash": {
+						"description": "Also search spam and trash (default false).",
+						"type": "boolean"
+					},
+					"idsOnly": {
+						"description": "Return only message and thread ids, without envelopes (default false).",
+						"type": "boolean"
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "send_draft",
+			"description": "Send an existing Gmail draft by its draft id (from create_draft or list_drafts). The draft's content is sent as-is; the draft disappears once sent, so a repeat send of the same id fails naturally. Returns the sent message id as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"description": "The draft id to send."
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"draftId"
+				]
+			}
+		},
+		{
+			"name": "send_email",
+			"description": "Send a Gmail message (plain text, with an optional HTML alternative and attached files) immediately, without a draft step. Pass replyToMessageId to send a reply in that message's thread with correct threading headers; a reply names its recipients like a new email, in to and cc; set replyAll to have a reply that is not to everyone on the original refused. Prefer create_draft when the user should review before sending. Returns the sent message id as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\"). Required, replies included: a reply goes to the original's Reply-To, else its From, as read_email shows them.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"default": "",
+						"type": "string",
+						"description": "Subject line. For replies the original message's subject is reused (Re:-prefixed) so Gmail threads the message; this value is the fallback when the original has no subject."
+					},
+					"body": {
+						"default": "",
+						"type": "string",
+						"maxLength": 1000000,
+						"description": "Plain-text message body."
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Send a reply to this Gmail message id, threaded correctly. When every recipient was already on that message, the reply quotes it below the body, as Gmail's reply does, so leave it out of body.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address. Must be the account's own address or one of its verified send-as aliases (see list_send_as). Omit to use the account's default.",
+						"type": "string"
+					},
+					"replyAll": {
+						"description": "With replyToMessageId: a reply to everyone on the original, who must all be in to and cc: to its Reply-To, else its From, and cc its other To and Cc recipients, leaving out this account's own addresses. A call whose to and cc are not exactly those is refused, sending nothing, with the recipients to pass.",
+						"type": "boolean"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": [
+								"content"
+							],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "update_draft",
+			"description": "Edit a Gmail draft (plain text with an optional HTML alternative and attached files). Omitted fields keep the draft's current value; pass an empty string to clear cc or bcc. Gmail rebuilds the draft whole, so files already attached to it are dropped and listed as droppedAttachments; pass the ones to keep again in attachments. The draft keeps its thread unless replyToMessageId re-threads it. Returns the draft id as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"draftId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The draft id to update."
+					},
+					"to": {
+						"description": "Recipient(s), comma-separated (\"sender@example.com, recipient@example.com\").",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"cc": {
+						"description": "Cc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"bcc": {
+						"description": "Bcc recipient(s), comma-separated.",
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						]
+					},
+					"subject": {
+						"description": "Subject line (see create_draft for reply subject rules).",
+						"type": "string"
+					},
+					"body": {
+						"description": "Plain-text message body. With only htmlBody given, it is the HTML as text.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"htmlBody": {
+						"description": "Optional HTML version of the same message. When set, the message is sent as multipart/alternative with `body` as its plain-text part and this as its HTML part, both passed through unchanged.",
+						"type": "string",
+						"maxLength": 1000000
+					},
+					"replyToMessageId": {
+						"description": "Re-thread the draft as a reply to this Gmail message id.",
+						"type": "string"
+					},
+					"from": {
+						"description": "Send from this address: the account's own address or a verified send-as alias (see list_send_as). Omit to keep the draft's current sender.",
+						"type": "string"
+					},
+					"attachments": {
+						"description": "Files to attach, at most 25 MB together. For a larger file, put a Google Drive link in the body instead.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"content": {
+									"type": "string",
+									"minLength": 1,
+									"pattern": "^[A-Za-z0-9+/_=\\s-]*$",
+									"description": "The file's bytes, base64-encoded."
+								},
+								"filename": {
+									"description": "The name recipients see, e.g. \"invoice.pdf\".",
+									"type": "string",
+									"minLength": 1,
+									"maxLength": 255
+								},
+								"mimeType": {
+									"description": "The file's MIME type, e.g. \"application/pdf\" (default \"application/octet-stream\").",
+									"type": "string",
+									"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*\\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]*$"
+								},
+								"inline": {
+									"description": "Show this image in the HTML body where htmlBody has <img src=\"cid:FILENAME\"> (a signature logo, for example) instead of listing it as a file.",
+									"type": "boolean"
+								}
+							},
+							"required": [
+								"content"
+							],
+							"additionalProperties": false
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"draftId"
+				]
+			}
+		},
+		{
+			"name": "update_email_labels",
+			"description": "Add and/or remove Gmail labels on one message, one whole thread or many messages (pass exactly one of messageId, threadId or messageIds). For bulk changes, pass the message ids from search_emails as messageIds in one call instead of one call per message. Label ids come from list_labels; UNREAD, STARRED, IMPORTANT and user labels are all valid. TRASH and SPAM are refused here. For a message, returns the updated label ids as JSON; for a thread, returns the thread id (per-message label state via get_thread); for messageIds, returns how many messages were changed.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"messageId": {
+						"description": "Message to relabel.",
+						"type": "string"
+					},
+					"threadId": {
+						"description": "Thread to relabel (every message in it).",
+						"type": "string"
+					},
+					"messageIds": {
+						"description": "Many messages to act on in one call: up to 1000 message ids.",
+						"minItems": 1,
+						"maxItems": 1000,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minLength": 1
+						}
+					},
+					"addLabelIds": {
+						"description": "Label ids to add.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"removeLabelIds": {
+						"description": "Label ids to remove.",
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false
+			}
+		},
+		{
+			"name": "update_label",
+			"description": "Update a Gmail user label's name, visibility, or color by label id (a patch: omitted fields keep their values; system labels like INBOX cannot be updated). Returns the updated label as JSON.",
+			"inputSchema": {
+				"type": "object",
+				"properties": {
+					"labelId": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The label id, from list_labels."
+					},
+					"name": {
+						"description": "New label name.",
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 225
+					},
+					"labelListVisibility": {
+						"description": "Sidebar visibility (default labelShow).",
+						"type": "string",
+						"enum": [
+							"labelShow",
+							"labelShowIfUnread",
+							"labelHide"
+						]
+					},
+					"messageListVisibility": {
+						"description": "Message-list visibility (default show).",
+						"type": "string",
+						"enum": [
+							"show",
+							"hide"
+						]
+					},
+					"textColor": {
+						"description": "Label text color as hex; must be from Gmail's fixed palette, set together with backgroundColor.",
+						"type": "string"
+					},
+					"backgroundColor": {
+						"description": "Label background color as hex; must be from Gmail's fixed palette, set together with textColor.",
+						"type": "string"
+					},
+					"colorPreset": {
+						"description": "Label color from Gmail's preset tiles. textColor and backgroundColor, when set, win over it.",
+						"type": "string",
+						"enum": [
+							"LABEL_COLOR_PRESET_UNSPECIFIED",
+							"LABEL_COLOR_PRESET_BLACK",
+							"LABEL_COLOR_PRESET_DARK_GRAY",
+							"LABEL_COLOR_PRESET_GRAY",
+							"LABEL_COLOR_PRESET_LIGHT_GRAY",
+							"LABEL_COLOR_PRESET_WHITE",
+							"LABEL_COLOR_PRESET_RED",
+							"LABEL_COLOR_PRESET_ORANGE",
+							"LABEL_COLOR_PRESET_YELLOW",
+							"LABEL_COLOR_PRESET_GREEN",
+							"LABEL_COLOR_PRESET_MINT",
+							"LABEL_COLOR_PRESET_TEAL",
+							"LABEL_COLOR_PRESET_BLUE",
+							"LABEL_COLOR_PRESET_PURPLE",
+							"LABEL_COLOR_PRESET_PINK",
+							"LABEL_COLOR_PRESET_DARK_RED",
+							"LABEL_COLOR_PRESET_DARK_ORANGE",
+							"LABEL_COLOR_PRESET_DARK_GREEN",
+							"LABEL_COLOR_PRESET_DARK_BLUE",
+							"LABEL_COLOR_PRESET_DARK_PURPLE",
+							"LABEL_COLOR_PRESET_DARK_PINK",
+							"LABEL_COLOR_PRESET_BROWN"
+						]
+					}
+				},
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"additionalProperties": false,
+				"required": [
+					"labelId"
+				]
+			}
+		}
+	]
+}

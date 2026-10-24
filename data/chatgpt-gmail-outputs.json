@@ -1,0 +1,2151 @@
+{
+	"format": "gmail-connector-response-schemas/v1",
+	"id": "chatgpt",
+	"title": "ChatGPT Gmail",
+	"captured_on": "2026-10-24",
+	"evidence": "inferred-from-live-samples",
+	"note": "Response schemas inferred from samples. They do not specify required fields or establish a complete MCP outputSchema. Observed variants and unknown types are preserved. Captured account values are excluded.",
+	"tools": [
+		{
+			"name": "apply_labels_to_emails",
+			"runtime_name": "mcp__codex_apps__gmail_apply_labels_to_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"success": {
+							"type": "boolean"
+						},
+						"added_label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"removed_label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"created_labels": {
+							"type": "array",
+							"items": {
+								"description": "No array elements were observed. The item type is unknown."
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "archive_emails",
+			"runtime_name": "mcp__codex_apps__gmail_archive_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"thread_id": {
+										"type": "string"
+									},
+									"success": {
+										"type": "boolean"
+									},
+									"error": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"detail": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "batch_modify_email",
+			"runtime_name": "mcp__codex_apps__gmail_batch_modify_email",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"success": {
+							"type": "boolean"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "batch_read_email",
+			"runtime_name": "mcp__codex_apps__gmail_batch_read_email",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"internal_date": {
+										"type": "string"
+									},
+									"payload": {
+										"type": "object",
+										"properties": {
+											"part_id": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"filename": {
+												"type": "string"
+											},
+											"headers": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"value": {
+															"type": "string"
+														}
+													}
+												}
+											},
+											"body": {
+												"type": "object",
+												"properties": {
+													"size": {
+														"type": "number"
+													},
+													"base64_url_content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													},
+													"content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													},
+													"attachment_id": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													}
+												}
+											},
+											"read_attachment_supported": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": [
+													"null"
+												]
+											},
+											"parts": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																},
+																"content": {
+																	"type": "string"
+																},
+																"attachment_id": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														},
+														"parts": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														}
+													}
+												}
+											}
+										}
+									},
+									"size_estimate": {
+										"type": "number"
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "batch_read_email_threads",
+			"runtime_name": "mcp__codex_apps__gmail_batch_read_email_threads",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"messages": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"thread_id": {
+													"type": "string"
+												},
+												"label_ids": {
+													"type": "array",
+													"items": {
+														"type": "string"
+													}
+												},
+												"snippet": {
+													"type": "string"
+												},
+												"history_id": {
+													"type": "string"
+												},
+												"internal_date": {
+													"type": "string"
+												},
+												"payload": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																},
+																"content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																},
+																"attachment_id": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														},
+														"parts": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"part_id": {
+																		"type": "string"
+																	},
+																	"mime_type": {
+																		"type": "string"
+																	},
+																	"filename": {
+																		"type": "string"
+																	},
+																	"headers": {
+																		"type": "array",
+																		"items": {
+																			"type": "object",
+																			"properties": {
+																				"name": {
+																					"type": "string"
+																				},
+																				"value": {
+																					"type": "string"
+																				}
+																			}
+																		}
+																	},
+																	"body": {
+																		"type": "object",
+																		"properties": {
+																			"size": {
+																				"type": "number"
+																			},
+																			"base64_url_content": {
+																				"description": "Only null was observed. The non-null type is unknown.",
+																				"x-observed-types": [
+																					"null"
+																				]
+																			},
+																			"content": {
+																				"anyOf": [
+																					{
+																						"type": "string"
+																					},
+																					{
+																						"type": "null"
+																					}
+																				]
+																			},
+																			"attachment_id": {
+																				"anyOf": [
+																					{
+																						"type": "null"
+																					},
+																					{
+																						"type": "string"
+																					}
+																				]
+																			}
+																		}
+																	},
+																	"read_attachment_supported": {
+																		"anyOf": [
+																			{
+																				"type": "null"
+																			},
+																			{
+																				"type": "boolean"
+																			}
+																		]
+																	},
+																	"parts": {
+																		"description": "Only null was observed. The non-null type is unknown.",
+																		"x-observed-types": [
+																			"null"
+																		]
+																	}
+																}
+															}
+														}
+													}
+												},
+												"size_estimate": {
+													"type": "number"
+												},
+												"classification_label_values": {
+													"description": "Only null was observed. The non-null type is unknown.",
+													"x-observed-types": [
+														"null"
+													]
+												}
+											}
+										}
+									},
+									"snippet": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "bulk_label_matching_emails",
+			"runtime_name": "mcp__codex_apps__gmail_bulk_label_matching_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"label_id": {
+							"type": "string"
+						},
+						"label_name": {
+							"type": "string"
+						},
+						"created_label": {
+							"type": "boolean"
+						},
+						"archived": {
+							"type": "boolean"
+						},
+						"messages_matched": {
+							"type": "number"
+						},
+						"pages_processed": {
+							"type": "number"
+						},
+						"batches_sent": {
+							"type": "number"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "create_draft",
+			"runtime_name": "mcp__codex_apps__gmail_create_draft",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"message": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"thread_id": {
+									"type": "string"
+								},
+								"label_ids": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"history_id": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"internal_date": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"payload": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"size_estimate": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"classification_label_values": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "create_label",
+			"runtime_name": "mcp__codex_apps__gmail_create_label",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						},
+						"messageListVisibility": {
+							"type": "string"
+						},
+						"labelListVisibility": {
+							"type": "string"
+						},
+						"created": {
+							"type": "boolean"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "delete_emails",
+			"runtime_name": "mcp__codex_apps__gmail_delete_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"message_id": {
+										"type": "string"
+									},
+									"success": {
+										"type": "boolean"
+									},
+									"error": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"detail": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "forward_emails",
+			"runtime_name": "mcp__codex_apps__gmail_forward_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"responses": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"history_id": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"internal_date": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"payload": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"size_estimate": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"original_message_id": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "get_profile",
+			"runtime_name": "mcp__codex_apps__gmail_get_profile",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"email": {
+							"type": "string"
+						},
+						"nickname": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"picture": {
+							"type": "string"
+						},
+						"workspace_id": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"workspace_name": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"workspace_picture": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "list_drafts",
+			"runtime_name": "mcp__codex_apps__gmail_list_drafts",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"drafts": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"draft_id": {
+										"type": "string"
+									},
+									"message_id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"from_": {
+										"type": "string"
+									},
+									"to": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"cc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"bcc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"subject": {
+										"type": "string"
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"labels": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"has_attachment": {
+										"type": "boolean"
+									},
+									"email_ts": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"next_page_token": {
+							"type": "string"
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "list_labels",
+			"runtime_name": "mcp__codex_apps__gmail_list_labels",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"labels": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"type": {
+										"type": "string"
+									},
+									"messageListVisibility": {
+										"type": "string"
+									},
+									"labelListVisibility": {
+										"type": "string"
+									},
+									"messagesTotal": {
+										"type": "number"
+									},
+									"messagesUnread": {
+										"type": "number"
+									},
+									"threadsTotal": {
+										"type": "number"
+									},
+									"threadsUnread": {
+										"type": "number"
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 2,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "read_attachment",
+			"runtime_name": "mcp__codex_apps__gmail_read_attachment",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"message_id": {
+							"type": "string"
+						},
+						"attachment_id": {
+							"type": "string"
+						},
+						"filename": {
+							"type": "string"
+						},
+						"mime_type": {
+							"type": "string"
+						},
+						"size_bytes": {
+							"type": "number"
+						},
+						"file_uri": {
+							"type": "object",
+							"properties": {
+								"download_url": {
+									"type": "string"
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"file_name": {
+									"type": "string"
+								}
+							}
+						},
+						"content": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"text": {
+										"type": "string"
+									},
+									"annotations": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									},
+									"meta": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						},
+						"images": {
+							"type": "array",
+							"items": {
+								"description": "No array elements were observed. The item type is unknown."
+							}
+						},
+						"content_truncated": {
+							"type": "boolean"
+						},
+						"extraction_file_uri": {
+							"type": "object",
+							"properties": {
+								"download_url": {
+									"type": "string"
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"file_name": {
+									"type": "string"
+								}
+							}
+						},
+						"structuredContent": {
+							"type": "object",
+							"properties": {
+								"message_id": {
+									"type": "string"
+								},
+								"attachment_id": {
+									"type": "string"
+								},
+								"filename": {
+									"type": "string"
+								},
+								"mime_type": {
+									"type": "string"
+								},
+								"size_bytes": {
+									"type": "number"
+								},
+								"content": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"type": {
+												"type": "string"
+											},
+											"text": {
+												"type": "string"
+											},
+											"annotations": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": [
+													"null"
+												]
+											},
+											"meta": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": [
+													"null"
+												]
+											}
+										}
+									}
+								},
+								"images": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								},
+								"content_truncated": {
+									"type": "boolean"
+								},
+								"file_uri": {
+									"type": "object",
+									"properties": {
+										"download_url": {
+											"type": "string"
+										},
+										"file_id": {
+											"type": "string"
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"file_name": {
+											"type": "string"
+										}
+									}
+								},
+								"file_id": {
+									"type": "string"
+								},
+								"download_url": {
+									"type": "string"
+								},
+								"extraction_file_uri": {
+									"type": "object",
+									"properties": {
+										"download_url": {
+											"type": "string"
+										},
+										"file_id": {
+											"type": "string"
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"file_name": {
+											"type": "string"
+										}
+									}
+								},
+								"__attachments__": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"display_files_from_actions_ext": {
+												"type": "boolean"
+											},
+											"source": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "read_email",
+			"runtime_name": "mcp__codex_apps__gmail_read_email",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"thread_id": {
+							"type": "string"
+						},
+						"label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"snippet": {
+							"type": "string"
+						},
+						"history_id": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"internal_date": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"payload": {
+							"anyOf": [
+								{
+									"type": "object",
+									"properties": {
+										"part_id": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"mime_type": {
+											"type": "string"
+										},
+										"filename": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"headers": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"value": {
+														"type": "string"
+													}
+												}
+											}
+										},
+										"body": {
+											"anyOf": [
+												{
+													"type": "object",
+													"properties": {
+														"size": {
+															"type": "number"
+														},
+														"base64_url_content": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														},
+														"content": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														},
+														"attachment_id": {
+															"description": "Only null was observed. The non-null type is unknown.",
+															"x-observed-types": [
+																"null"
+															]
+														}
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"read_attachment_supported": {
+											"description": "Only null was observed. The non-null type is unknown.",
+											"x-observed-types": [
+												"null"
+											]
+										},
+										"parts": {
+											"anyOf": [
+												{
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"part_id": {
+																"type": "string"
+															},
+															"mime_type": {
+																"type": "string"
+															},
+															"filename": {
+																"type": "string"
+															},
+															"headers": {
+																"type": "array",
+																"items": {
+																	"type": "object",
+																	"properties": {
+																		"name": {
+																			"type": "string"
+																		},
+																		"value": {
+																			"type": "string"
+																		}
+																	}
+																}
+															},
+															"body": {
+																"type": "object",
+																"properties": {
+																	"size": {
+																		"type": "number"
+																	},
+																	"base64_url_content": {
+																		"description": "Only null was observed. The non-null type is unknown.",
+																		"x-observed-types": [
+																			"null"
+																		]
+																	},
+																	"content": {
+																		"anyOf": [
+																			{
+																				"type": "string"
+																			},
+																			{
+																				"type": "null"
+																			}
+																		]
+																	},
+																	"attachment_id": {
+																		"anyOf": [
+																			{
+																				"type": "null"
+																			},
+																			{
+																				"type": "string"
+																			}
+																		]
+																	}
+																}
+															},
+															"read_attachment_supported": {
+																"anyOf": [
+																	{
+																		"type": "null"
+																	},
+																	{
+																		"type": "boolean"
+																	}
+																]
+															},
+															"parts": {
+																"description": "Only null was observed. The non-null type is unknown.",
+																"x-observed-types": [
+																	"null"
+																]
+															}
+														}
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
+										}
+									}
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"size_estimate": {
+							"anyOf": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"classification_label_values": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"raw": {
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 7,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "read_email_thread",
+			"runtime_name": "mcp__codex_apps__gmail_read_email_thread",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"history_id": {
+							"type": "string"
+						},
+						"messages": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"label_ids": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"history_id": {
+										"type": "string"
+									},
+									"internal_date": {
+										"type": "string"
+									},
+									"payload": {
+										"type": "object",
+										"properties": {
+											"part_id": {
+												"type": "string"
+											},
+											"mime_type": {
+												"type": "string"
+											},
+											"filename": {
+												"type": "string"
+											},
+											"headers": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"name": {
+															"type": "string"
+														},
+														"value": {
+															"type": "string"
+														}
+													}
+												}
+											},
+											"body": {
+												"type": "object",
+												"properties": {
+													"size": {
+														"type": "number"
+													},
+													"base64_url_content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													},
+													"content": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													},
+													"attachment_id": {
+														"description": "Only null was observed. The non-null type is unknown.",
+														"x-observed-types": [
+															"null"
+														]
+													}
+												}
+											},
+											"read_attachment_supported": {
+												"description": "Only null was observed. The non-null type is unknown.",
+												"x-observed-types": [
+													"null"
+												]
+											},
+											"parts": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"part_id": {
+															"type": "string"
+														},
+														"mime_type": {
+															"type": "string"
+														},
+														"filename": {
+															"type": "string"
+														},
+														"headers": {
+															"type": "array",
+															"items": {
+																"type": "object",
+																"properties": {
+																	"name": {
+																		"type": "string"
+																	},
+																	"value": {
+																		"type": "string"
+																	}
+																}
+															}
+														},
+														"body": {
+															"type": "object",
+															"properties": {
+																"size": {
+																	"type": "number"
+																},
+																"base64_url_content": {
+																	"description": "Only null was observed. The non-null type is unknown.",
+																	"x-observed-types": [
+																		"null"
+																	]
+																},
+																"content": {
+																	"anyOf": [
+																		{
+																			"type": "string"
+																		},
+																		{
+																			"type": "null"
+																		}
+																	]
+																},
+																"attachment_id": {
+																	"anyOf": [
+																		{
+																			"type": "null"
+																		},
+																		{
+																			"type": "string"
+																		}
+																	]
+																}
+															}
+														},
+														"read_attachment_supported": {
+															"anyOf": [
+																{
+																	"type": "null"
+																},
+																{
+																	"type": "boolean"
+																}
+															]
+														},
+														"parts": {
+															"anyOf": [
+																{
+																	"type": "null"
+																},
+																{
+																	"type": "array",
+																	"items": {
+																		"type": "object",
+																		"properties": {
+																			"part_id": {
+																				"type": "string"
+																			},
+																			"mime_type": {
+																				"type": "string"
+																			},
+																			"filename": {
+																				"type": "string"
+																			},
+																			"headers": {
+																				"type": "array",
+																				"items": {
+																					"type": "object",
+																					"properties": {
+																						"name": {
+																							"type": "string"
+																						},
+																						"value": {
+																							"type": "string"
+																						}
+																					}
+																				}
+																			},
+																			"body": {
+																				"type": "object",
+																				"properties": {
+																					"size": {
+																						"type": "number"
+																					},
+																					"base64_url_content": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": [
+																							"null"
+																						]
+																					},
+																					"content": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": [
+																							"null"
+																						]
+																					},
+																					"attachment_id": {
+																						"description": "Only null was observed. The non-null type is unknown.",
+																						"x-observed-types": [
+																							"null"
+																						]
+																					}
+																				}
+																			},
+																			"read_attachment_supported": {
+																				"description": "Only null was observed. The non-null type is unknown.",
+																				"x-observed-types": [
+																					"null"
+																				]
+																			},
+																			"parts": {
+																				"type": "array",
+																				"items": {
+																					"type": "object",
+																					"properties": {
+																						"part_id": {
+																							"type": "string"
+																						},
+																						"mime_type": {
+																							"type": "string"
+																						},
+																						"filename": {
+																							"type": "string"
+																						},
+																						"headers": {
+																							"type": "array",
+																							"items": {
+																								"type": "object",
+																								"properties": {
+																									"name": {
+																										"type": "string"
+																									},
+																									"value": {
+																										"type": "string"
+																									}
+																								}
+																							}
+																						},
+																						"body": {
+																							"type": "object",
+																							"properties": {
+																								"size": {
+																									"type": "number"
+																								},
+																								"base64_url_content": {
+																									"description": "Only null was observed. The non-null type is unknown.",
+																									"x-observed-types": [
+																										"null"
+																									]
+																								},
+																								"content": {
+																									"type": "string"
+																								},
+																								"attachment_id": {
+																									"description": "Only null was observed. The non-null type is unknown.",
+																									"x-observed-types": [
+																										"null"
+																									]
+																								}
+																							}
+																						},
+																						"read_attachment_supported": {
+																							"description": "Only null was observed. The non-null type is unknown.",
+																							"x-observed-types": [
+																								"null"
+																							]
+																						},
+																						"parts": {
+																							"description": "Only null was observed. The non-null type is unknown.",
+																							"x-observed-types": [
+																								"null"
+																							]
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															]
+														}
+													}
+												}
+											}
+										}
+									},
+									"size_estimate": {
+										"type": "number"
+									},
+									"classification_label_values": {
+										"description": "Only null was observed. The non-null type is unknown.",
+										"x-observed-types": [
+											"null"
+										]
+									}
+								}
+							}
+						},
+						"snippet": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						}
+					}
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"error_code": {
+							"type": "string"
+						},
+						"error_data": {
+							"type": "object",
+							"properties": {
+								"type": {
+									"type": "string"
+								},
+								"code": {
+									"type": "string"
+								},
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"successful_probe_count": 3,
+				"error_probe_count": 1
+			}
+		},
+		{
+			"name": "search_email_ids",
+			"runtime_name": "mcp__codex_apps__gmail_search_email_ids",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"message_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"next_page_token": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": {
+					"type": "object",
+					"properties": {
+						"error": {
+							"type": "string"
+						},
+						"error_code": {
+							"type": "string"
+						},
+						"error_data": {
+							"type": "object",
+							"properties": {
+								"reason": {
+									"type": "string"
+								},
+								"clamp_errors": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"path": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											},
+											"message": {
+												"type": "string"
+											},
+											"keyword": {
+												"type": "string"
+											},
+											"value": {
+												"type": "number"
+											}
+										}
+									}
+								},
+								"clamp_rewrites": {
+									"type": "array",
+									"items": {
+										"description": "No array elements were observed. The item type is unknown."
+									}
+								}
+							}
+						}
+					}
+				},
+				"successful_probe_count": 3,
+				"error_probe_count": 1
+			}
+		},
+		{
+			"name": "search_emails",
+			"runtime_name": "mcp__codex_apps__gmail_search_emails",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"emails": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"thread_id": {
+										"type": "string"
+									},
+									"from_": {
+										"type": "string"
+									},
+									"to": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"cc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"bcc": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"subject": {
+										"type": "string"
+									},
+									"snippet": {
+										"type": "string"
+									},
+									"labels": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									},
+									"has_attachment": {
+										"type": "boolean"
+									},
+									"attachments": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"filename": {
+													"type": "string"
+												},
+												"mime_type": {
+													"type": "string"
+												},
+												"size_bytes": {
+													"type": "number"
+												},
+												"attachment_id": {
+													"type": "string"
+												},
+												"read_attachment_supported": {
+													"type": "boolean"
+												}
+											}
+										}
+									},
+									"inline_images": {
+										"type": "array",
+										"items": {
+											"description": "No array elements were observed. The item type is unknown."
+										}
+									},
+									"email_ts": {
+										"type": "string"
+									},
+									"display_url": {
+										"type": "string"
+									},
+									"display_title": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"next_page_token": {
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"type": "string"
+								}
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 5,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "send_draft",
+			"runtime_name": "mcp__codex_apps__gmail_send_draft",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"threadId": {
+							"type": "string"
+						},
+						"labelIds": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "send_email",
+			"runtime_name": "mcp__codex_apps__gmail_send_email",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"thread_id": {
+							"type": "string"
+						},
+						"label_ids": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"snippet": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"history_id": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"internal_date": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"payload": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"size_estimate": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						},
+						"classification_label_values": {
+							"description": "Only null was observed. The non-null type is unknown.",
+							"x-observed-types": [
+								"null"
+							]
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		},
+		{
+			"name": "update_draft",
+			"runtime_name": "mcp__codex_apps__gmail_update_draft",
+			"response": {
+				"evidence": "inferred-from-live-samples",
+				"envelope": "These schemas describe CallToolResult.structuredContent. They exclude the outer result object.",
+				"caveat": "Samples do not establish a complete output contract or required fields. Empty arrays leave item types unknown. Null-only fields leave non-null types unknown.",
+				"success_schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"message": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"thread_id": {
+									"type": "string"
+								},
+								"label_ids": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"snippet": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"history_id": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"internal_date": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"payload": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"size_estimate": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								},
+								"classification_label_values": {
+									"description": "Only null was observed. The non-null type is unknown.",
+									"x-observed-types": [
+										"null"
+									]
+								}
+							}
+						}
+					}
+				},
+				"error_schema": null,
+				"successful_probe_count": 1,
+				"error_probe_count": 0
+			}
+		}
+	]
+}
