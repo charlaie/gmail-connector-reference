@@ -839,9 +839,11 @@ pre code {
 	font-size: 14px;
 }
 .limitations {
-	max-width: 76ch;
 	font-size: 13px;
 	line-height: 1.85;
+}
+.limitations p {
+	max-width: none;
 }
 .limitations h3 {
 	margin-top: 22px;
